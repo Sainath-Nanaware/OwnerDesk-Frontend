@@ -1,0 +1,9 @@
+@import "tailwindcss";
+
+.pb {
+    @apply border-2 border-red-700
+}
+
+body {
+    @apply bg-[#f5f5f5];
+}
