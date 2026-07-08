@@ -2,17 +2,28 @@ import axiosClient from "../../api/axiosClient";
 
 const TOKEN_KEY = "token";
 const USER_ID = "userID";
-const ROLE = "role";
+const USERNAME = "userName";
 
 export const setToken = (token) => {
-  console.log(token);
+  // console.log(token);
   localStorage.setItem(TOKEN_KEY, token);
   axiosClient.defaults.headers.common["Authorization"] = `Bearer ${token}`;
 };
 
-export const setUserId = (id) => {
+export const setUserInfo = (id,userName) => {
   localStorage.setItem(USER_ID, id);
+  localStorage.setItem(USERNAME,userName);
 };
+
+export const removeUserInfo=()=>{
+  localStorage.removeItem(USER_ID);
+  localStorage.removeItem(USERNAME);
+
+}
+
+export const getUserName=()=>{
+  return localStorage.getItem(USERNAME)
+}
 
 export const removeToken = () => {
   localStorage.removeItem(TOKEN_KEY);
@@ -22,3 +33,10 @@ export const removeToken = () => {
 export const getToken = () => {
   return localStorage.getItem(TOKEN_KEY);
 };
+
+export const handleLogout=()=>{
+ localStorage.removeItem(TOKEN_KEY);
+ delete axiosClient.defaults.headers.common["Authorization"];
+ localStorage.removeItem(USER_ID);
+ localStorage.removeItem(USERNAME);
+}

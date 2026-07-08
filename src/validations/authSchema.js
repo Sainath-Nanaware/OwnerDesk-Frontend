@@ -100,3 +100,57 @@ export const containsUsername = (password, username) => {
   if (!username) return false;
   return password.toLowerCase().includes(username.toLowerCase());
 };
+
+
+
+/**
+ * ============================================
+ * LOGIN VALIDATION SCHEMA
+ * ============================================
+ * This file contains all validation rules for the login form.
+ * Customize these rules as needed for your requirements.
+ */
+
+export const loginSchema = yup.object({
+  /**
+   * EMAIL VALIDATION
+   * - Required field
+   * - Must be valid email format
+   * - Custom regex for additional validation
+   */
+  email: yup
+    .string()
+    .required("Email is required")
+    .email("Please enter a valid email address")
+    .matches(
+      /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+      "Please enter a valid email address (e.g., name@domain.com)"
+    ),
+
+  /**
+   * PASSWORD VALIDATION
+   * - Required field
+   * - Minimum 8 characters
+   * - No other restrictions
+   */
+  password: yup
+    .string()
+    .required("Password is required")
+    .min(8, "Password must be 8 characters")
+    .max(8, "Password must be 8 characters"),
+});
+
+/**
+ * ============================================
+ * OPTIONAL: CUSTOM VALIDATION HELPERS
+ * ============================================
+ * You can add custom validation functions here
+ * if you need more complex validation logic
+ */
+
+// Example: Check if email is from allowed domains
+export const isAllowedDomain = (email) => {
+  const allowedDomains = ['gmail.com', 'yahoo.com', 'outlook.com'];
+  const domain = email.split('@')[1];
+  return allowedDomains.includes(domain);
+};

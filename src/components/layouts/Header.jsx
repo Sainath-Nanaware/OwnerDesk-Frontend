@@ -10,6 +10,7 @@ import {
   FaUser
 } from 'react-icons/fa';
 import { MdDashboard, MdSettings, MdLogout } from 'react-icons/md';
+import { getUserName } from '../../features/auth/authService';
 
 const Header = ({ isLoggedIn = false }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -17,6 +18,8 @@ const Header = ({ isLoggedIn = false }) => {
   const [activeTab, setActiveTab] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
+  const userName=getUserName()
+
 
   // ============================================
   // NAVIGATION ITEMS - Conditional based on login state
@@ -47,7 +50,7 @@ const Header = ({ isLoggedIn = false }) => {
     { icon: <MdDashboard className="w-5 h-5" />, label: 'Dashboard', path: '/dashboard' },
     { icon: <FaCog className="w-5 h-5" />, label: 'Settings', path: '/settings' },
     { divider: true },
-    { icon: <FaSignOutAlt className="w-5 h-5" />, label: 'Logout', path: '/logout', danger: true },
+    { icon: <FaSignOutAlt className="w-5 h-5" />, label: 'Logout', path: '/', danger: true },
   ];
 
   // ============================================
@@ -207,7 +210,7 @@ const Header = ({ isLoggedIn = false }) => {
                   className="flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-indigo-50/50 transition-all group"
                 >
                   <div className="w-9 h-9 bg-linear-to-br from-indigo-600 to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-sm">
-                    JD
+                    <FaUser/>
                   </div>
                   <FaChevronDown className={`w-4 h-4 text-gray-400 transition-transform duration-300 ${
                     isDropdownOpen ? 'rotate-180' : ''
@@ -218,8 +221,8 @@ const Header = ({ isLoggedIn = false }) => {
                 {isDropdownOpen && (
                   <div className="absolute right-0 mt-2 w-56 bg-white rounded-2xl shadow-2xl border border-gray-100 py-2 animate-fade-in-down">
                     <div className="px-4 py-3 border-b border-gray-100">
-                      <p className="font-semibold text-gray-900">John Doe</p>
-                      <p className="text-xs text-gray-500">john@ownerdesk.com</p>
+                      <p className="font-semibold text-gray-900">{userName}</p>
+                      {/* <p className="text-xs text-gray-500">john@ownerdesk.com</p> */}
                     </div>
                     <div className="py-1">
                       {dropdownItems.map((item, index) => (
@@ -314,8 +317,8 @@ const Header = ({ isLoggedIn = false }) => {
                   JD
                 </div>
                 <div className="flex-1">
-                  <p className="font-semibold text-gray-900">John Doe</p>
-                  <p className="text-xs text-gray-500">john@ownerdesk.com</p>
+                  <p className="font-semibold text-gray-900">{userName}</p>
+                  {/* <p className="text-xs text-gray-500">john@ownerdesk.com</p> */}
                 </div>
               </div>
               <div className="mt-2 space-y-1">
