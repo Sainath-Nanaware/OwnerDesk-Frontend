@@ -51,7 +51,7 @@ export const signUpSchema = yup.object({
   phoneNumber: yup
     .string()
     .required("Phone number is required")
-    .matches(/^[0-9]{10}$/, "Please enter a valid 10-digit phone number"),
+    .matches(/^(\+91)?[6-9]\d{9}$/, "Please enter a valid 10-digit phone number"),
 
   /**
    * PASSWORD VALIDATION
