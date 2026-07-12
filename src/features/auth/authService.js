@@ -25,6 +25,10 @@ export const getUserName=()=>{
   return localStorage.getItem(USERNAME)
 }
 
+export const getUserID=()=>{
+  return localStorage.getItem(USER_ID)
+}
+
 export const removeToken = () => {
   localStorage.removeItem(TOKEN_KEY);
   delete axiosClient.defaults.headers.common["Authorization"];

@@ -5,3 +5,8 @@ import axiosClient from "./axiosClient";
 
 export const registerUser = (data) => axiosClient.post("/user/register", data);
 export const loginUser=(data)=>axiosClient.post("/user/login",data);
+
+
+//property API
+export const getAllProperty = (ownerID,page,limit) =>
+  axiosClient.get(`/property/owner/${ownerID}?page=${page}&limit=${limit}`);
