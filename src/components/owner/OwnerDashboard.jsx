@@ -14,10 +14,11 @@ import StatsCard from '../cards/StatsCard';
 import PropertyCard from '../cards/PropertyCard';
 import PropertyForm from '../forms/PropertyForm';
 import DeleteModal from '../popups/DeleteModal';
-import { getAllPropertyAsyncThunk } from '../../features/property/propertySlice';
+import { addNewPropertyAsyncThunk, getAllPropertyAsyncThunk } from '../../features/property/propertySlice';
 import { getUserID } from '../../features/auth/authService';
 import { toast } from 'react-toastify';
 import { useDispatch, useSelector } from 'react-redux';
+import { addNewProperty } from '../../api/apiRequests';
 
 // ============================================
 // OWNER DASHBOARD COMPONENT
@@ -317,30 +318,28 @@ const OwnerDashboard = () => {
          * Endpoint: POST /api/properties
          * Body: property data
          */
-        const response = await fetch(`${API_BASE_URL}/properties`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(data),
-        });
-        const result = await response.json();
-
-        if (result.success) {
-          alert('✅ Property added successfully!');
-          closeDrawer();
-          
+        const resultActionAddProperty=await dispatch(addNewPropertyAsyncThunk(data))
+        console.log(resultActionAddProperty)
+        if (addNewPropertyAsyncThunk.fulfilled.match(resultActionAddProperty)){
+  
+           toast.success('Property added successfully!');
+           closeDrawer();
+           reset(); // Clear the form
+           console.log("new peoperty added")
           // Refresh the current page data
           if (searchTerm.trim()) {
             searchProperties(searchTerm, pagination.currentPage);
           } else {
             fetchProperties(pagination.currentPage);
           }
-        } else {
-          alert('❌ Failed to add property: ' + result.message);
+        }else {
+         console.error("add new property failed:", resultActionAddProperty.payload);
+         toast.error('❌ Failed to add property')
         }
       }
     } catch (error) {
       console.error('Error submitting form:', error);
-      alert('❌ Error: ' + error.message);
+      // alert('❌ Error: ' + error.message);
     } finally {
       setIsSubmitting(false);
     }
@@ -424,7 +423,7 @@ const OwnerDashboard = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
           <StatsCard 
             label="Total Properties"
-            value={properties.length}
+            value={pagination.totalRecords}
             icon={<FaBuilding className="w-6 h-6" />}
             bgColor="bg-blue-50"
             textColor="text-blue-600"
