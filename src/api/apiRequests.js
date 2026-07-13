@@ -11,4 +11,6 @@ export const loginUser=(data)=>axiosClient.post("/user/login",data);
 export const getAllProperty = (ownerID,page,limit) =>
   axiosClient.get(`/property/owner/${ownerID}?page=${page}&limit=${limit}`);
 export const addNewProperty=(data)=>axiosClient.post("/property/add", data);
+export const updateProperty = (data, propertyID) =>
+  axiosClient.patch(`/property/${propertyID}`,data);
 

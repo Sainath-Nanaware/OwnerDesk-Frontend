@@ -14,7 +14,7 @@ import StatsCard from '../cards/StatsCard';
 import PropertyCard from '../cards/PropertyCard';
 import PropertyForm from '../forms/PropertyForm';
 import DeleteModal from '../popups/DeleteModal';
-import { addNewPropertyAsyncThunk, getAllPropertyAsyncThunk } from '../../features/property/propertySlice';
+import { addNewPropertyAsyncThunk, getAllPropertyAsyncThunk, updatePropertyAsyncThunk } from '../../features/property/propertySlice';
 import { getUserID } from '../../features/auth/authService';
 import { toast } from 'react-toastify';
 import { useDispatch, useSelector } from 'react-redux';
@@ -260,6 +260,7 @@ const OwnerDashboard = () => {
     if (property) {
       setIsEditing(true);
       setSelectedProperty(property);
+      // console.log("investigate",property)
     } else {
       setIsEditing(false);
       setSelectedProperty(null);
@@ -290,25 +291,23 @@ const OwnerDashboard = () => {
          * Endpoint: PUT /api/properties/:id
          * Body: property data
          */
-        const response = await fetch(`${API_BASE_URL}/properties/${selectedProperty._id}`, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(data),
-        });
-        const result = await response.json();
-
-        if (result.success) {
-          alert('✅ Property updated successfully!');
+       const credentials={
+        data:data,
+        propertyID:selectedProperty._id
+       }
+       const resultActionUpdateProperty=await dispatch(updatePropertyAsyncThunk(credentials))
+       if (updatePropertyAsyncThunk.fulfilled.match(resultActionUpdateProperty)){
+          toast.success("Property updated successfully!")
           closeDrawer();
-          
-          // Refresh the current page data
+           // Refresh the current page data
           if (searchTerm.trim()) {
             searchProperties(searchTerm, pagination.currentPage);
           } else {
             fetchProperties(pagination.currentPage);
           }
-        } else {
-          alert('❌ Failed to update property: ' + result.message);
+       } else {
+          toast.error('❌ Failed to update property: ');
+          console.log("failed update property")
         }
       } else {
         /**

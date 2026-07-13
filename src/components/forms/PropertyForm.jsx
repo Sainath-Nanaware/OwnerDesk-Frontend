@@ -1,5 +1,5 @@
 // components/dashboard/PropertyForm.jsx
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { FaSave, FaTimes, FaCheckCircle, FaExclamationCircle } from 'react-icons/fa';
@@ -34,6 +34,7 @@ const PropertyForm = ({
     handleSubmit,
     formState: { errors, touchedFields, isValid },
     watch,
+    reset,
   } = useForm({
     resolver: yupResolver(propertySchema),
     mode: 'onChange',
@@ -47,6 +48,33 @@ const PropertyForm = ({
       occupiedRooms: '',
     },
   });
+ // ============================================
+  // 🔥 IMPORTANT: FILL FORM WHEN EDITING
+  // ============================================
+  // This useEffect runs whenever initialData changes
+  // It populates the form with existing property data
+  // ============================================
+  useEffect(() => {
+    if (initialData && isEditing) {
+      /**
+       * ============================================
+       * POPULATE FORM WITH EXISTING DATA
+       * ============================================
+       * Map API field names to form field names
+       * If your API returns different field names,
+       * update the mapping below
+       */
+      reset({
+        propertyName: initialData.propertyName || '',
+        address: initialData.address || '',
+        city: initialData.city || '',
+        state: initialData.state || '',
+        pincode: initialData.pincode || '',
+        totalRooms: initialData.totalRooms || '',
+        occupiedRooms: initialData.occupiedRooms || '',
+      });
+    }
+  }, [initialData, isEditing, reset]); // Dependencies: runs when initialData changes
 
   // ============================================
   // CHECK IF FIELD SHOULD SHOW SUCCESS STATE

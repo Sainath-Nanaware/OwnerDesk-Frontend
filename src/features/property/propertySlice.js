@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { addNewProperty, getAllProperty } from "../../api/apiRequests";
+import { addNewProperty, getAllProperty, updateProperty } from "../../api/apiRequests";
 import { getUserID } from "../auth/authService";
 
 
@@ -31,6 +31,22 @@ export const addNewPropertyAsyncThunk = createAsyncThunk(
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data);
     }
+  }
+);
+
+export const updatePropertyAsyncThunk = createAsyncThunk(
+  "/updateProperty",
+  async (credentials, thunkAPI) => {
+     try {
+       console.log("Hi am in updatePropertyThunk ");
+       console.log("data:",credentials.data);
+       console.log("property id:",credentials.propertyID);
+       const response = await updateProperty(credentials.data,credentials.propertyID);
+       console.log("update property thunk api call response:", response);
+       return response.data;
+     } catch (error) {
+       return thunkAPI.rejectWithValue(error.response.data);
+     }
   }
 );
 
