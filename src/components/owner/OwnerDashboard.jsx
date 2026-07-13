@@ -14,7 +14,7 @@ import StatsCard from '../cards/StatsCard';
 import PropertyCard from '../cards/PropertyCard';
 import PropertyForm from '../forms/PropertyForm';
 import DeleteModal from '../popups/DeleteModal';
-import { addNewPropertyAsyncThunk, getAllPropertyAsyncThunk, updatePropertyAsyncThunk } from '../../features/property/propertySlice';
+import { addNewPropertyAsyncThunk, getAllPropertyAsyncThunk, searchPropertyAsyncThunk, updatePropertyAsyncThunk } from '../../features/property/propertySlice';
 import { getUserID } from '../../features/auth/authService';
 import { toast } from 'react-toastify';
 import { useDispatch, useSelector } from 'react-redux';
@@ -165,32 +165,44 @@ const OwnerDashboard = () => {
        * Same response structure as fetchProperties
        */
       
-      const params = new URLSearchParams();
-      params.append('page', page);
-      params.append('pageSize', 5);
-      if (city.trim()) {
-        params.append('city', city.trim());
+      // const params = new URLSearchParams();
+      // params.append('page', page);
+      // params.append('pageSize', 5);
+      // if (city.trim()) {
+      //   params.append('city', city.trim());
+      // }
+      const credentials={
+        ownerID:getUserID(),
+        city:city.trim(),
+        page:page,
+        limit:6
       }
+      const resultActionSearchProperty=await dispatch(searchPropertyAsyncThunk(credentials))
+       if (searchPropertyAsyncThunk.fulfilled.match(resultActionSearchProperty)){
+         console.log("search property data recived successfully")
+       
+      //set state when redux data change we already handle that logic using use effect  
+      // const response = await fetch(`${API_BASE_URL}/properties?${params.toString()}`);
+      // const result = await response.json();
 
-      const response = await fetch(`${API_BASE_URL}/properties?${params.toString()}`);
-      const result = await response.json();
-
-      if (result.success) {
-        setProperties(result.data.properties);
-        setPagination({
-          totalRecords: result.data.pagination.totalRecords,
-          currentPage: result.data.pagination.currentPage,
-          totalPages: result.data.pagination.totalPages,
-          pageSize: result.data.pagination.pageSize,
-          hasNextPage: result.data.pagination.hasNextPage,
-          hasPreviousPage: result.data.pagination.hasPreviousPage
-        });
+      // if (result.success) {
+      //   setProperties(result.data.properties);
+      //   setPagination({
+      //     totalRecords: result.data.pagination.totalRecords,
+      //     currentPage: result.data.pagination.currentPage,
+      //     totalPages: result.data.pagination.totalPages,
+      //     pageSize: result.data.pagination.pageSize,
+      //     hasNextPage: result.data.pagination.hasNextPage,
+      //     hasPreviousPage: result.data.pagination.hasPreviousPage
+      //   });
       } else {
-        alert('Failed to search properties: ' + result.message);
+        toast.error('Error searching properties. Please try again.');
+        console.log("failed get serch property data");
       }
     } catch (error) {
-      console.error('Error searching properties:', error);
-      alert('Error searching properties. Please try again.');
+      toast.error('Error searching properties. Please try again.');
+      console.log("failed get serch property data");
+      // alert('Error searching properties. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -323,7 +335,7 @@ const OwnerDashboard = () => {
   
            toast.success('Property added successfully!');
            closeDrawer();
-           reset(); // Clear the form
+          //  reset(); // Clear the form
            console.log("new peoperty added")
           // Refresh the current page data
           if (searchTerm.trim()) {
@@ -467,7 +479,7 @@ const OwnerDashboard = () => {
             </div>
             <button
               type="submit"
-              className="px-6 py-2.5 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-indigo-500/25 transition-all"
+              className="px-6 py-2.5 bg-linear-to-r from-indigo-600 to-purple-600 text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-indigo-500/25 transition-all"
             >
               Search
             </button>
@@ -496,7 +508,7 @@ const OwnerDashboard = () => {
             {!searchTerm && (
               <button 
                 onClick={() => openDrawer()}
-                className="mt-4 px-6 py-2.5 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl font-semibold hover:shadow-lg transition-all"
+                className="mt-4 px-6 py-2.5 bg-linear-to-r from-indigo-600 to-purple-600 text-white rounded-xl font-semibold hover:shadow-lg transition-all"
               >
                 Add Property
               </button>
@@ -549,7 +561,7 @@ const OwnerDashboard = () => {
                           onClick={() => handlePageChange(pageNumber)}
                           className={`px-4 py-2 rounded-lg font-medium transition-all ${
                             isCurrentPage
-                              ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg shadow-indigo-500/25'
+                              ? 'bg-linear-to-r from-indigo-600 to-purple-600 text-white shadow-lg shadow-indigo-500/25'
                               : 'hover:bg-gray-100 text-gray-600 hover:text-indigo-600'
                           }`}
                         >
@@ -602,7 +614,7 @@ const OwnerDashboard = () => {
           {/* Drawer Header */}
           <div className="flex items-center justify-between p-6 border-b border-gray-200">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-xl flex items-center justify-center">
+              <div className="w-10 h-10 bg-linear-to-br from-indigo-600 to-purple-600 rounded-xl flex items-center justify-center">
                 {isEditing ? (
                   <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />

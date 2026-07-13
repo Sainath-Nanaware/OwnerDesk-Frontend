@@ -108,7 +108,7 @@ const PropertyCard = ({ property, onClick, onEdit, onDelete }) => {
         <div className="flex items-center justify-between pt-3 border-t border-gray-100">
           <div>
             <p className="text-xs text-gray-500">Address</p>
-            <p className="text-sm text-gray-700 truncate max-w-[120px]">{property.address}</p>
+            <p className="text-sm text-gray-700 truncate max-w-30">{property.address}</p>
           </div>
           <div className="flex items-center gap-2 text-indigo-600 font-semibold text-sm group-hover:gap-3 transition-all">
             <span>View Rooms</span>

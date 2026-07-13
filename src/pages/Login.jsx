@@ -99,6 +99,7 @@ const Login = () => {
       // ERROR - Handle API errors
       // ============================================
       setServerError(error.message || 'Invalid email or password. Please try again.');
+      toast.error("Invalid email or password. Please try again.")
     } finally {
       setIsSubmitting(false);
     }

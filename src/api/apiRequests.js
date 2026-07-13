@@ -1,3 +1,4 @@
+import axios from "axios";
 import axiosClient from "./axiosClient";
 
 
@@ -13,4 +14,7 @@ export const getAllProperty = (ownerID,page,limit) =>
 export const addNewProperty=(data)=>axiosClient.post("/property/add", data);
 export const updateProperty = (data, propertyID) =>
   axiosClient.patch(`/property/${propertyID}`,data);
-
+export const searchProperty = (ownerID,city,page,limit) =>
+  axiosClient.get(
+    `property/owner/${ownerID}/search?city=${city}&page=${page}&limit=${limit}`
+  );

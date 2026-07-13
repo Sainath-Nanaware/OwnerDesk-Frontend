@@ -197,7 +197,7 @@ const PropertyForm = ({
               {/* Error message */}
               {fieldError && touchedFields[field.name] && (
                 <div className="flex items-start gap-1.5 mt-1">
-                  <FaExclamationCircle className="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0" />
+                  <FaExclamationCircle className="w-4 h-4 text-red-500 mt-0.5 shrink-0" />
                   <p className="text-sm text-red-500">{fieldError.message}</p>
                 </div>
               )}
@@ -218,7 +218,7 @@ const PropertyForm = ({
         <button
           type="submit"
           disabled={isSubmitting || !isValid}
-          className="flex-1 px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-indigo-500/25 transition-all disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+          className="flex-1 px-6 py-3 bg-linear-to-r from-indigo-600 to-purple-600 text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-indigo-500/25 transition-all disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2"
         >
           {isSubmitting ? (
             <>
