@@ -18,3 +18,7 @@ export const searchProperty = (ownerID,city,page,limit) =>
   axiosClient.get(
     `property/owner/${ownerID}/search?city=${city}&page=${page}&limit=${limit}`
   );
+
+// Rooms API
+
+export const getAllRoomsOfProperty=(propertyId,params)=>axiosClient.get(`/room/property/${propertyId}/rooms?${params}`)

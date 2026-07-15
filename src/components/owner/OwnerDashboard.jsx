@@ -19,6 +19,7 @@ import { getUserID } from '../../features/auth/authService';
 import { toast } from 'react-toastify';
 import { useDispatch, useSelector } from 'react-redux';
 import { addNewProperty } from '../../api/apiRequests';
+import { Link } from 'react-router-dom';
 
 // ============================================
 // OWNER DASHBOARD COMPONENT
@@ -261,8 +262,8 @@ const OwnerDashboard = () => {
      * Update this with your actual navigation logic
      */
     console.log('Navigate to property rooms:', propertyId);
-    // window.location.href = `/property/${propertyId}/rooms`;
-    alert(`📋 Navigate to Property #${propertyId} Rooms Dashboard`);
+    window.location.href = `/property/${propertyId}/rooms`;
+    // alert(`📋 Navigate to Property #${propertyId} Rooms Dashboard`);
   };
 
   // ============================================
@@ -519,6 +520,7 @@ const OwnerDashboard = () => {
             {/* Property Cards Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {properties.map((property) => (
+                // <Link to={`http://localhost:5173/property/${property._id}/rooms`} key={property._id}>
                 <PropertyCard 
                   key={property._id}
                   property={property}
@@ -526,6 +528,7 @@ const OwnerDashboard = () => {
                   onEdit={openDrawer}
                   onDelete={confirmDelete}
                 />
+                // </Link>
               ))}
             </div>
 

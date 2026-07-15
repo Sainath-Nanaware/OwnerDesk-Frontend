@@ -30,7 +30,7 @@ const PropertyCard = ({ property, onClick, onEdit, onDelete }) => {
   return (
     <div 
       className="group bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-2 cursor-pointer"
-      onClick={() => onClick(property.id)}
+      onClick={() => onClick(property._id)}
     >
       {/* ===== PROPERTY IMAGE ===== */}
       <div className="relative h-48 overflow-hidden">
@@ -45,7 +45,7 @@ const PropertyCard = ({ property, onClick, onEdit, onDelete }) => {
         <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300 flex items-center justify-center">
           <div className="opacity-0 group-hover:opacity-100 transition-all duration-300">
             <span className="px-4 py-2 bg-white/90 backdrop-blur-sm rounded-xl text-sm font-semibold text-gray-900">
-              Click to view rooms
+              Click to view rooms/units information
             </span>
           </div>
         </div>

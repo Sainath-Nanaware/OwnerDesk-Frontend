@@ -8,6 +8,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Login from './pages/Login';
 import OwnerHomePage from './pages/owner/OwnerHomePage';
+import RoomsDashboard from './pages/room/RoomsDashboard';
 
 
 function App() {
@@ -20,6 +21,7 @@ function App() {
         <Route path='/signup' element={<SignUp/>}/>
         <Route path='/login' element={<Login/>}/>
         <Route path='/ownerhome' element={<OwnerHomePage/>}/>
+        <Route path='/property/:propertyId/rooms' element={<RoomsDashboard/>}/>
       </Routes>
       <ToastContainer position="top-right" autoClose={3000} />
     </>
