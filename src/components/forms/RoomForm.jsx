@@ -1,5 +1,5 @@
 // components/rooms/RoomForm.jsx
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { FaSave, FaTimes, FaCheckCircle, FaExclamationCircle } from 'react-icons/fa';
@@ -26,6 +26,7 @@ const RoomForm = ({ onSubmit, onCancel, isSubmitting = false }) => {
     handleSubmit,
     formState: { errors, touchedFields, isValid },
     watch,
+    reset
   } = useForm({
     resolver: yupResolver(roomSchema),
     mode: 'onChange',
@@ -38,6 +39,18 @@ const RoomForm = ({ onSubmit, onCancel, isSubmitting = false }) => {
     },
   });
 
+  //following logic for when user submit form fields clear when he create new room he get clear form 
+  useEffect(()=>{
+    if(isSubmitting){
+      reset({
+      roomNumber: '',
+      roomType: '',
+      floor: '',
+      monthlyRent: '',
+      deposit: '',
+    })
+    }
+  },[isSubmitting])
   // ============================================
   // CHECK IF FIELD SHOULD SHOW SUCCESS STATE
   // ============================================
@@ -56,7 +69,7 @@ const RoomForm = ({ onSubmit, onCancel, isSubmitting = false }) => {
       name: 'roomNumber',
       label: 'Room Number',
       type: 'text',
-      placeholder: 'e.g., 101, A-01, 2B',
+      placeholder: 'e.g., 101,102,112.. only numbers',
       required: true,
       colSpan: 'md:col-span-1',
     },
@@ -168,7 +181,7 @@ const RoomForm = ({ onSubmit, onCancel, isSubmitting = false }) => {
               {/* Error message */}
               {fieldError && touchedFields[field.name] && (
                 <div className="flex items-start gap-1.5 mt-1">
-                  <FaExclamationCircle className="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0" />
+                  <FaExclamationCircle className="w-4 h-4 text-red-500 mt-0.5 shrink-0" />
                   <p className="text-sm text-red-500">{fieldError.message}</p>
                 </div>
               )}
@@ -189,7 +202,7 @@ const RoomForm = ({ onSubmit, onCancel, isSubmitting = false }) => {
         <button
           type="submit"
           disabled={isSubmitting || !isValid}
-          className="flex-1 px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-indigo-500/25 transition-all disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+          className="flex-1 px-6 py-3 bg-linear-to-r from-indigo-600 to-purple-600 text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-indigo-500/25 transition-all disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2"
         >
           {isSubmitting ? (
             <>

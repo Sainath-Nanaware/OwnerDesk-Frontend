@@ -106,7 +106,7 @@ const RoomFilter = ({
           <div className="flex gap-2">
             <button
               type="submit"
-              className="flex-1 px-4 py-2.5 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-indigo-500/25 transition-all text-sm flex items-center justify-center gap-2"
+              className="flex-1 px-4 py-2.5 bg-linear-to-r from-indigo-600 to-purple-600 text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-indigo-500/25 transition-all text-sm flex items-center justify-center gap-2"
             >
               <FaSearch className="w-3.5 h-3.5" />
               Search

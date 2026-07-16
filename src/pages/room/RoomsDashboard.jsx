@@ -15,9 +15,10 @@ import RoomForm from '../../components/forms/RoomForm';
 import RoomFilter from '../../components/room/RoomFilter';
 import { ROOM_TYPES } from '../../validations/roomValidation';
 import { useDispatch, useSelector } from 'react-redux';
-import { getAllRoomsOfPropertyAsyncThunk } from '../../features/room/roomSlice';
+import { createRoomAsyncThunk, getAllRoomsOfPropertyAsyncThunk } from '../../features/room/roomSlice';
 import { toast } from 'react-toastify';
 import Header from '../../components/layouts/Header';
+import { getUserID } from '../../features/auth/authService';
 
 // ============================================
 // ROOMS DASHBOARD COMPONENT
@@ -66,7 +67,7 @@ const RoomsDashboard = () => {
   // ============================================
 //   const API_BASE_URL = 'https://your-api.com/api'; // CHANGE THIS
 
-//update store data required time so we handle store updated data uding useEffect
+//update store data required time so we handle store updated data using useEffect
   useEffect(()=>{
     console.log("updated property rooms data on room store",roomStore);
     setPropertyName(roomStore.propertyInfo.propertyName || 'Property');
@@ -231,23 +232,26 @@ const RoomsDashboard = () => {
        * Endpoint: POST /api/properties/:propertyId/rooms
        * Body: room data
        */
-      const response = await fetch(`${API_BASE_URL}/properties/${propertyId}/rooms`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
-      });
-      const result = await response.json();
-
-      if (result.success) {
-        alert('✅ Room created successfully!');
+      // const response = await fetch(`${API_BASE_URL}/properties/${propertyId}/rooms`, {
+      //   method: 'POST',
+      //   headers: { 'Content-Type': 'application/json' },
+      //   body: JSON.stringify(data),
+      // });
+      // const result = await response.json();
+      data.ownerId=getUserID()
+      data.propertyId=propertyId
+      const resultActionCreateRoom=await dispatch(createRoomAsyncThunk(data))
+      if (createRoomAsyncThunk.fulfilled.match(resultActionCreateRoom)){
+        toast.success('Room created successfully!');
         setIsDrawerOpen(false);
         fetchRooms(pagination.currentPage, filters);
       } else {
-        alert('❌ Failed to create room: ' + result.message);
+       toast.error('❌ Failed to create room! please check room number are not unique.');
+       console.error('failed create new room');
       }
     } catch (error) {
       console.error('Error creating room:', error);
-      alert('❌ Error: ' + error.message);
+      toString.error('❌ Failed to create room');
     } finally {
       setIsSubmitting(false);
     }
@@ -290,7 +294,7 @@ const RoomsDashboard = () => {
           </div>
           <button 
             onClick={() => setIsDrawerOpen(true)}
-            className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl font-semibold hover:shadow-xl hover:shadow-indigo-500/25 hover:scale-105 transition-all duration-300"
+            className="flex items-center gap-2 px-6 py-3 bg-linear-to-r from-indigo-600 to-purple-600 text-white rounded-xl font-semibold hover:shadow-xl hover:shadow-indigo-500/25 hover:scale-105 transition-all duration-300"
           >
             <FaPlus className="w-4 h-4" />
             Add New Room
@@ -359,7 +363,7 @@ const RoomsDashboard = () => {
             {!Object.values(filters).some(f => f) && (
               <button 
                 onClick={() => setIsDrawerOpen(true)}
-                className="mt-4 px-6 py-2.5 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl font-semibold hover:shadow-lg transition-all"
+                className="mt-4 px-6 py-2.5 bg-linear-to-r from-indigo-600 to-purple-600 text-white rounded-xl font-semibold hover:shadow-lg transition-all"
               >
                 Add Room
               </button>
@@ -429,7 +433,7 @@ const RoomsDashboard = () => {
                           onClick={() => handlePageChange(pageNumber)}
                           className={`px-4 py-2 rounded-lg font-medium transition-all ${
                             isCurrentPage
-                              ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg shadow-indigo-500/25'
+                              ? 'bg-linear-to-r from-indigo-600 to-purple-600 text-white shadow-lg shadow-indigo-500/25'
                               : 'hover:bg-gray-100 text-gray-600 hover:text-indigo-600'
                           }`}
                         >
@@ -483,7 +487,7 @@ const RoomsDashboard = () => {
           {/* Drawer Header */}
           <div className="flex items-center justify-between p-6 border-b border-gray-200">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-xl flex items-center justify-center">
+              <div className="w-10 h-10 bg-linear-to-br from-indigo-600 to-purple-600 rounded-xl flex items-center justify-center">
                 <FaPlus className="w-5 h-5 text-white" />
               </div>
               <div>

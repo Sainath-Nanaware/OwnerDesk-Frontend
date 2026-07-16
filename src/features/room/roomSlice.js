@@ -1,7 +1,24 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { getAllRoomsOfProperty } from "../../api/apiRequests";
+import { createRoom, getAllRoomsOfProperty } from "../../api/apiRequests";
 
 
+export const createRoomAsyncThunk = createAsyncThunk(
+  "/createRoom",
+  async (credentials, thunkAPI) => {
+    try {
+      console.log("Hi am in createRoomsThunk ");
+      console.log(credentials);
+      const response = await createRoom(credentials);
+      console.log(
+        "create new room thunk API response data:",
+        response.data
+      );
+      return response.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data);
+    }
+  }
+);
 export const getAllRoomsOfPropertyAsyncThunk = createAsyncThunk(
   "/getAllRoomsOfProperty",
   async (credentials, thunkAPI) => {

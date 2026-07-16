@@ -28,7 +28,7 @@ export const roomSchema = yup.object({
     .string()
     .required("Room type is required")
     .oneOf(
-      ["single", "double", "triple", "dormitory", "studio"],
+      ["single", "double", "triple", "dormitory", "studio", "1RK","1BHK","2BHK","3BHK","4BHK","PG","shop","office"],
       "Invalid room type"
     ),
 
@@ -71,8 +71,14 @@ export const ROOM_TYPES = [
   { value: "triple", label: "Triple" },
   { value: "dormitory", label: "Dormitory" },
   { value: "studio", label: "Studio" },
+  { value: "1RK", label: "1 RK" },
+  { value: "2BHK", label: "1 BHK" },
+  { value: "3BHK", label: "2 BHK" },
+  { value: "4BHK", label: "3 BHK" },
+  { value: "PG", label: "PG" },
+  { value: "shop", label: "Shop" },
+  { value: "office", label: "Office" },
 ];
-
 /**
  * ============================================
  * OCCUPANCY STATUS - Match your backend

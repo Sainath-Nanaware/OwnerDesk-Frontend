@@ -22,3 +22,4 @@ export const searchProperty = (ownerID,city,page,limit) =>
 // Rooms API
 
 export const getAllRoomsOfProperty=(propertyId,params)=>axiosClient.get(`/room/property/${propertyId}/rooms?${params}`)
+export const createRoom = (data) => axiosClient.post("/room/add",data);
