@@ -9,6 +9,7 @@ import "react-toastify/dist/ReactToastify.css";
 import Login from './pages/Login';
 import OwnerHomePage from './pages/owner/OwnerHomePage';
 import RoomsDashboard from './pages/room/RoomsDashboard';
+import RoomManagement from './pages/room/RoomManagement';
 
 
 function App() {
@@ -22,6 +23,7 @@ function App() {
         <Route path='/login' element={<Login/>}/>
         <Route path='/ownerhome' element={<OwnerHomePage/>}/>
         <Route path='/property/:propertyId/rooms' element={<RoomsDashboard/>}/>
+        <Route path='/roomInfo/:roomId' element={<RoomManagement/>}/>
       </Routes>
       <ToastContainer position="top-right" autoClose={3000} />
     </>

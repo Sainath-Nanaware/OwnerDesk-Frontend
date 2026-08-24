@@ -1,6 +1,6 @@
 // pages/RoomsDashboard.jsx
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { 
   FaBed, 
   FaUsers, 
@@ -391,11 +391,13 @@ const RoomsDashboard = () => {
                 }
                 
                 return (
+                  <Link to={`/roomInfo/${room._id}`} key={`${room._id}`}>
                   <RoomCard 
                     key={room._id}
                     room={room}
                     rentStatus={rentStatus}
                   />
+                  </Link>
                 );
               })}
             </div>
