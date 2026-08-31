@@ -2,6 +2,9 @@
 import React, { useState, useEffect } from 'react';
 import { FaTimes, FaSearch, FaUser, FaUserPlus, FaUserMinus } from 'react-icons/fa';
 import { MdPhone, MdEmail } from 'react-icons/md';
+import { useDispatch, useSelector } from 'react-redux';
+import { getAllTenantListAsyncThunk } from '../../features/tenant/tenantSlice';
+import { getUserID } from '../../features/auth/authService';
 
 /**
  * ============================================
@@ -30,6 +33,13 @@ const AllocateTenantModal = ({
   const [tenants, setTenants] = useState([]);
   const [loading, setLoading] = useState(false);
   const [selectedTenant, setSelectedTenant] = useState(null);
+  const dispatch=useDispatch()
+  const tenantStore=useSelector((state)=>state.tenant)
+
+  useEffect(()=>{
+      setTenants(tenantStore.allTenantList);
+      console.log("store tenants:",tenantStore.allTenantList)
+  },[tenantStore])
 
   // ============================================
   // FETCH TENANTS FOR SEARCH
@@ -49,11 +59,15 @@ const AllocateTenantModal = ({
        * Endpoint: GET /api/tenants?search=:query
        * Response: { success: true, data: { tenants: [...] } }
        */
-      const response = await fetch(`https://your-api.com/api/tenants?search=${query}`);
-      const result = await response.json();
-      
-      if (result.success) {
-        setTenants(result.data.tenants);
+      // const response = await fetch(`https://your-api.com/api/tenants?search=${query}`);
+      // const result = await response.json();
+      const credentials ={
+        ownerID:getUserID(),
+        searchParameters:`search=${query}&status=inactive` //we only fetch unalocated tenant means only inactive tenants
+      }
+      const resultActionGetAllTenantInfo=await dispatch(getAllTenantListAsyncThunk(credentials))
+      if (getAllTenantListAsyncThunk.fulfilled.match(resultActionGetAllTenantInfo)){
+        // setTenants(tenantStore.allTenantList);
       }
     } catch (error) {
       console.error('Error searching tenants:', error);
@@ -100,7 +114,7 @@ const AllocateTenantModal = ({
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-gray-200">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-gradient-to-br from-green-500 to-emerald-500 rounded-xl flex items-center justify-center">
+            <div className="w-10 h-10 bg-linear-to-br from-green-500 to-emerald-500 rounded-xl flex items-center justify-center">
               <FaUserPlus className="w-5 h-5 text-white" />
             </div>
             <div>
@@ -128,7 +142,7 @@ const AllocateTenantModal = ({
             // ===== SHOW CURRENT TENANT =====
             <div className="space-y-4">
               <div className="bg-gray-50 rounded-2xl p-4 flex items-center gap-4">
-                <div className="w-14 h-14 bg-gradient-to-br from-indigo-100 to-purple-100 rounded-full flex items-center justify-center text-2xl font-bold text-indigo-600">
+                <div className="w-14 h-14 bg-linear-to-br from-indigo-100 to-purple-100 rounded-full flex items-center justify-center text-2xl font-bold text-indigo-600">
                   {currentTenant.name?.charAt(0)}
                 </div>
                 <div className="flex-1">
@@ -191,11 +205,11 @@ const AllocateTenantModal = ({
                         }
                       `}
                     >
-                      <div className="w-10 h-10 bg-gradient-to-br from-indigo-100 to-purple-100 rounded-full flex items-center justify-center text-sm font-bold text-indigo-600">
-                        {tenant.name?.charAt(0)}
+                      <div className="w-10 h-10 bg-linear-to-br from-indigo-100 to-purple-100 rounded-full flex items-center justify-center text-sm font-bold text-indigo-600">
+                        {tenant.fullName?.charAt(0)}
                       </div>
                       <div className="flex-1">
-                        <p className="font-semibold text-gray-900">{tenant.name}</p>
+                        <p className="font-semibold text-gray-900">{tenant.fullName}</p>
                         <div className="flex items-center gap-3 text-xs text-gray-500">
                           <span>{tenant.phone}</span>
                           <span>{tenant.email}</span>
@@ -227,10 +241,10 @@ const AllocateTenantModal = ({
               {selectedTenant && (
                 <button
                   onClick={handleAllocate}
-                  className="w-full py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-indigo-500/25 transition-all flex items-center justify-center gap-2"
+                  className="w-full py-3 bg-linear-to-r from-indigo-600 to-purple-600 text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-indigo-500/25 transition-all flex items-center justify-center gap-2"
                 >
                   <FaUserPlus className="w-4 h-4" />
-                  Allocate {selectedTenant.name}
+                  Allocate {selectedTenant.fullName}
                 </button>
               )}
             </div>

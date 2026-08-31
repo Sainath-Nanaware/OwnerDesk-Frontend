@@ -32,3 +32,10 @@ export const getRoomInfo = (roomID, ownerID, month, year) =>
   );
 export const updateRoomInfo = (data, roomID) =>
   axiosClient.patch(`/room/${roomID}`,data);
+
+//Tenant API
+
+export const getAllTenantList = (ownerID, searchParameters) =>
+  axiosClient.get(
+    `/tenant/info/${ownerID}/all?${searchParameters}`
+  );
