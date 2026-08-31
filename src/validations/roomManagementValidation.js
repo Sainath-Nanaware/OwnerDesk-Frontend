@@ -86,11 +86,15 @@ export const remarksSchema = yup.object({
 // ROOM TYPES
 // ============================================
 export const ROOM_TYPES = [
-  { value: "1rk", label: "1 RK" },
-  { value: "1bhk", label: "1 BHK" },
-  { value: "2bhk", label: "2 BHK" },
-  { value: "3bhk", label: "3 BHK" },
-  { value: "studio", label: "Studio" },
+  { value: "single", label: "Single" },
+  { value: "double", label: "Double" },
+  { value: "shop", label: "Shop" },
+  { value: "PG", label: "PG" },
+  { value: "1RK", label: "1 RK" },
+  { value: "1BHK", label: "1 BHK" },
+  { value: "2BHK", label: "2 BHK" },
+  { value: "3BHK", label: "3 BHK" },
+  { value: "4BHK", label: "4 BHK" },
 ];
 
 // ============================================

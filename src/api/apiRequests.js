@@ -30,3 +30,5 @@ export const getRoomInfo = (roomID, ownerID, month, year) =>
   axiosClient.get(
     `/room/dashboard/${roomID}?ownerId=${ownerID}&month=${month}&year=${year}`
   );
+export const updateRoomInfo = (data, roomID) =>
+  axiosClient.patch(`/room/${roomID}`,data);

@@ -8,7 +8,7 @@ import RemarksSection from '../../components/room-management/RemarksSection';
 import { MONTHS, getYears } from '../../validations/roomManagementValidation';
 import { useDispatch, useSelector } from 'react-redux';
 import { getUserID } from '../../features/auth/authService';
-import { getRoomInfoAsyncThunk } from '../../features/roomManagement/roomManagementSlice';
+import { getRoomInfoAsyncThunk, updateRoomInfoAsyncThunk } from '../../features/roomManagement/roomManagementSlice';
 import { toast } from 'react-toastify';
 import Header from '../../components/layouts/Header';
 
@@ -135,19 +135,36 @@ const RoomManagement = () => {
      * ============================================
      * Endpoint: PUT /api/rooms/:roomId
      * Body: room data
-     */
-    const response = await fetch(`${API_BASE_URL}/rooms/${roomId}`, {
+     * 
+     *  const response = await fetch(`${API_BASE_URL}/rooms/${roomId}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data),
     });
-    const result = await response.json();
+     */
+    data.ownerId=getUserID();
+    data.propertyId=roomManagementStore.propertyInfo._id;
+    data.isDeleted= false;//important to add 
+    const credentials={
+      data:data,
+      roomID:roomId
+    }
+    const resultActionUpdateRoomInfo=await dispatch(updateRoomInfoAsyncThunk(credentials))
+      if (updateRoomInfoAsyncThunk.fulfilled.match(resultActionUpdateRoomInfo)){
+        // setRoomData(result.data);
+        // alert('✅ Room information updated successfully!');
+        toast.success("Room information updated successfully!")
+      
+      } else {
+        // toast.error(`${roomManagementStore.error}`)
+        // Get error message directly from the action payload
+        const errorMessage = 
+          resultActionUpdateRoomInfo.payload||  
+          "Failed to update room information.";
+        toast.error(errorMessage);
 
-    if (result.success) {
-      setRoomData(result.data);
-      alert('✅ Room information updated successfully!');
-    } else {
-      throw new Error(result.message);
+      // throw new Error(result.message);
+    
     }
   };
 
