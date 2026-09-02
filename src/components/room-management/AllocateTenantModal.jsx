@@ -123,7 +123,7 @@ const AllocateTenantModal = ({
               </h2>
               <p className="text-sm text-gray-500">
                 {currentTenant 
-                  ? `Currently occupied by ${currentTenant.name}`
+                  ? `Currently occupied by ${currentTenant.fullName}`
                   : 'Search and select a tenant to allocate'}
               </p>
             </div>
@@ -143,10 +143,10 @@ const AllocateTenantModal = ({
             <div className="space-y-4">
               <div className="bg-gray-50 rounded-2xl p-4 flex items-center gap-4">
                 <div className="w-14 h-14 bg-linear-to-br from-indigo-100 to-purple-100 rounded-full flex items-center justify-center text-2xl font-bold text-indigo-600">
-                  {currentTenant.name?.charAt(0)}
+                  {currentTenant.fullName?.charAt(0)}
                 </div>
                 <div className="flex-1">
-                  <h3 className="text-lg font-semibold text-gray-900">{currentTenant.name}</h3>
+                  <h3 className="text-lg font-semibold text-gray-900">{currentTenant.fullName}</h3>
                   <div className="flex items-center gap-4 text-sm text-gray-500 mt-1">
                     <span className="flex items-center gap-1">
                       <MdPhone className="w-4 h-4" />
@@ -178,7 +178,7 @@ const AllocateTenantModal = ({
                 <FaSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
                 <input
                   type="text"
-                  placeholder="Search tenants by name or phone..."
+                  placeholder="Search tenants by name..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"

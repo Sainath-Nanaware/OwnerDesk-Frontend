@@ -33,6 +33,13 @@ export const getRoomInfo = (roomID, ownerID, month, year) =>
 export const updateRoomInfo = (data, roomID) =>
   axiosClient.patch(`/room/${roomID}`,data);
 
+export const allocateRoom = (data) =>
+  axiosClient.post(`/room/allocate`,data);
+
+export const deallocateRoom = (data) =>
+  axiosClient.patch(`/room/deallocate`,data);
+
+
 //Tenant API
 
 export const getAllTenantList = (ownerID, searchParameters) =>

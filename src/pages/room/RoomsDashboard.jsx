@@ -69,7 +69,7 @@ const RoomsDashboard = () => {
 
 //update store data required time so we handle store updated data using useEffect
   useEffect(()=>{
-    console.log("updated property rooms data on room store",roomStore);
+    // console.log("updated property rooms data on room store",roomStore);
     setPropertyName(roomStore.propertyInfo.propertyName || 'Property');
     setRooms(roomStore.allRooms);
     setPagination({

@@ -9,9 +9,9 @@ export const signUp = createAsyncThunk(
   "/register",
   async (credentials, thunkAPI) => {
     try {
-      console.log("Hi am in signup slice")
+      // console.log("Hi am in signup slice")
       const response = await registerUser(credentials);
-      console.log("response of registration user in auth slice:",response)
+      // console.log("response of registration user in auth slice:",response)
       return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data);
@@ -21,7 +21,7 @@ export const signUp = createAsyncThunk(
 
 export const loginAsyncThunk=createAsyncThunk("/login",async(userCredentials,thunkAPI)=>{
   try{
-    console.log("User data in login async thunk:",userCredentials)
+    // console.log("User data in login async thunk:",userCredentials)
     const response=await loginUser(userCredentials);
     //set token and user info in local storage is remaining
     // console.log("Login  success response:",response.data.data.token)

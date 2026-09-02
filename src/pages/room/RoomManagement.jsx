@@ -8,7 +8,7 @@ import RemarksSection from '../../components/room-management/RemarksSection';
 import { MONTHS, getYears } from '../../validations/roomManagementValidation';
 import { useDispatch, useSelector } from 'react-redux';
 import { getUserID } from '../../features/auth/authService';
-import { getRoomInfoAsyncThunk, updateRoomInfoAsyncThunk } from '../../features/roomManagement/roomManagementSlice';
+import { allocateRoomAsyncThunk, deallocateRoomAsyncThunk, getRoomInfoAsyncThunk, updateRoomInfoAsyncThunk } from '../../features/roomManagement/roomManagementSlice';
 import { toast } from 'react-toastify';
 import Header from '../../components/layouts/Header';
 
@@ -179,19 +179,32 @@ const RoomManagement = () => {
      * Endpoint: POST /api/rooms/:roomId/allocate
      * Body: { tenantId: tenant._id }
      */
-    const response = await fetch(`${API_BASE_URL}/rooms/${roomId}/allocate`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ tenantId: tenant._id }),
-    });
-    const result = await response.json();
-
-    if (result.success) {
-      setRoomData(result.data.roomInfo);
-      alert(`✅ Tenant "${tenant.name}" allocated successfully!`);
-    } else {
-      alert('❌ Failed to allocate tenant: ' + result.message);
+    // const response = await fetch(`${API_BASE_URL}/rooms/${roomId}/allocate`, {
+    //   method: 'POST',
+    //   headers: { 'Content-Type': 'application/json' },
+    //   body: JSON.stringify({ tenantId: tenant._id }),
+    // });
+    // const result = await response.json();
+ 
+    const credentials={
+      ownerId:getUserID(),
+      propertyId:roomManagementStore.propertyInfo._id,
+      roomId:roomId,
+      tenantId: tenant._id,
     }
+
+    const resultActionAllocateRoom=await dispatch(allocateRoomAsyncThunk(credentials))
+      if (allocateRoomAsyncThunk.fulfilled.match(resultActionAllocateRoom)){
+        toast.success(`Tenant "${tenant.fullName}" allocated successfully!`)
+        window.location.reload();//for re-load page 
+
+        // alert(`✅ Tenant "${tenant.name}" allocated successfully!`);
+      } else {
+       const errorMessage = 
+          resultActionAllocateRoom.payload||  
+          "Failed to allocate room.";
+        toast.error(errorMessage);
+      }
   };
 
   // ============================================
@@ -204,17 +217,28 @@ const RoomManagement = () => {
      * ============================================
      * Endpoint: POST /api/rooms/:roomId/deallocate
      */
-    const response = await fetch(`${API_BASE_URL}/rooms/${roomId}/deallocate`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-    });
-    const result = await response.json();
+    // const response = await fetch(`${API_BASE_URL}/rooms/${roomId}/deallocate`, {
+    //   method: 'POST',
+    //   headers: { 'Content-Type': 'application/json' },
+    // });
+    // const result = await response.json();
+    const credentials={
+      ownerId:getUserID(),
+      propertyId:roomManagementStore.propertyInfo._id,
+      roomId:roomId,
+      // tenantId: tenant._id,
+    }
+    const resultActionDeAllocateRoom=await dispatch(deallocateRoomAsyncThunk(credentials))
+      if (deallocateRoomAsyncThunk.fulfilled.match(resultActionDeAllocateRoom)){
+      // setRoomData(result.data.roomInfo);
+      toast.success('Tenant deallocated successfully!');
+      window.location.reload();//for re-load page 
 
-    if (result.success) {
-      setRoomData(result.data.roomInfo);
-      alert('✅ Tenant deallocated successfully!');
     } else {
-      alert('❌ Failed to deallocate tenant: ' + result.message);
+       const errorMessage = 
+          resultActionDeAllocateRoom.payload||  
+          "Failed to deAllocate room.";
+        toast.error(errorMessage);
     }
   };
 
@@ -401,6 +425,7 @@ const RoomManagement = () => {
           <RoomInfoSection
             roomData={roomData}
             roomId={roomId}
+            allocatedTenantInfo={roomManagementStore.tenantInfo}
             onUpdate={handleUpdateRoomInfo}
             onAllocate={handleAllocateTenant}
             onDeallocate={handleDeallocateTenant}

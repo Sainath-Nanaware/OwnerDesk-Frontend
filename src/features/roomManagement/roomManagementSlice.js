@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { getRoomInfo, updateRoomInfo } from "../../api/apiRequests";
+import { allocateRoom, deallocateRoom, getRoomInfo, updateRoomInfo } from "../../api/apiRequests";
 
 export const getRoomInfoAsyncThunk = createAsyncThunk(
   "/getRoomInfo",
@@ -13,10 +13,10 @@ export const getRoomInfoAsyncThunk = createAsyncThunk(
         credentials.month,
         credentials.year
       );
-      console.log(
-        "get all info room thunk API response data:",
-        response.data
-      );
+      // console.log(
+      //   "get all info room thunk API response data:",
+      //   response.data
+      // );
       return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data);
@@ -28,13 +28,46 @@ export const updateRoomInfoAsyncThunk = createAsyncThunk(
   "/updateRoomInfo",
   async (credentials, thunkAPI) => {
     try {
-      console.log("Hi am in updateRoomAsyncThunk ");
-      console.log(credentials.data);
+      // console.log("Hi am in updateRoomAsyncThunk ");
+      // console.log(credentials.data);
       const response = await updateRoomInfo(
         credentials.data,
         credentials.roomID,        
       );
-      console.log("get all updated info of room thunk API response data:", response.data);
+      // console.log("get all updated info of room thunk API response data:", response.data);
+      return response.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error);
+    }
+  }
+);
+
+export const allocateRoomAsyncThunk = createAsyncThunk(
+  "/allocateRoom",
+  async (credentials, thunkAPI) => {
+    try {
+      // console.log("Hi am in allocateRoomAsyncThunk ");
+      // console.log(credentials);
+      const response = await allocateRoom(credentials)
+      // console.log(
+      //   "allocate room thunk API response data:",
+      //   response.data
+      // );
+      return response.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error);
+    }
+  }
+);
+
+export const deallocateRoomAsyncThunk = createAsyncThunk(
+  "/deallocateRoom",
+  async (credentials, thunkAPI) => {
+    try {
+      // console.log("Hi am in deallocateRoomAsyncThunk ");
+      // console.log(credentials);
+      const response = await deallocateRoom(credentials);
+      // console.log("deallocate room async thunk API response data:", response.data);
       return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error);
@@ -50,6 +83,8 @@ const roomManagementSlice = createSlice({
     tenantInfo: {},
     electricityBill: {},
     paymentStatus: {},
+    roomAllocate:1,
+    roomDeallocate:1,
     error: false,
     loading: false,
   },
@@ -60,7 +95,7 @@ const roomManagementSlice = createSlice({
         // console.log("pp", action.payload.data.paymentStatus);
         state.propertyInfo = action.payload.data?.property ?? {};
         state.roomInfo = action.payload.data?.room ?? {};
-        state.tenantInfo = action.payload.data?.tenant ?? {};
+        state.tenantInfo = action.payload.data?.tenant ?? null;
         state.electricityBill = action.payload.data?.electricityBill ?? {};
         state.paymentStatus = action.payload.data?.paymentStatus ?? {};
         state.error = false;
@@ -73,7 +108,14 @@ const roomManagementSlice = createSlice({
       .addCase(updateRoomInfoAsyncThunk.rejected, (state, action) => {
         // console.log("actiondata:",action.payload) we get only error message here
         state.error=action.payload;
-      });
+      })
+      .addCase(allocateRoomAsyncThunk.fulfilled,(state,action)=>{
+        state.roomAllocate=2;//we just update for get live data from roomManagement store
+      })
+      .addCase(deallocateRoomAsyncThunk.fulfilled,(state,action)=>{
+        state.roomDeallocate = 2; //we just update for get live data from roomManagement store
+        
+      })
   }
 });
 

@@ -6,13 +6,13 @@ export const createRoomAsyncThunk = createAsyncThunk(
   "/createRoom",
   async (credentials, thunkAPI) => {
     try {
-      console.log("Hi am in createRoomsThunk ");
-      console.log(credentials);
+      // console.log("Hi am in createRoomsThunk ");
+      // console.log(credentials);
       const response = await createRoom(credentials);
-      console.log(
-        "create new room thunk API response data:",
-        response.data
-      );
+      // console.log(
+      //   "create new room thunk API response data:",
+      //   response.data
+      // );
       return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data);
@@ -23,13 +23,13 @@ export const getAllRoomsOfPropertyAsyncThunk = createAsyncThunk(
   "/getAllRoomsOfProperty",
   async (credentials, thunkAPI) => {
     try {
-      console.log("Hi am in getAllPropertyOfRoomsThunk ");
-      console.log(credentials);
+      // console.log("Hi am in getAllPropertyOfRoomsThunk ");
+      // console.log(credentials);
       const response = await getAllRoomsOfProperty(
         credentials.propertyId,
         credentials.params
       );
-      console.log("get all property rooms thunk API response data:", response.data);
+      // console.log("get all property rooms thunk API response data:", response.data);
       return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data);
@@ -59,7 +59,7 @@ const roomSlice = createSlice({
       .addCase(getAllRoomsOfPropertyAsyncThunk.fulfilled, (state, action) => {
         state.propertyInfo = action.payload.data.property;
         state.allRooms = action.payload.data.rooms;
-        console.log("extrabuilder data of room store",action.payload.data.property)
+        // console.log("extrabuilder data of room store",action.payload.data.property)
         state.pagination.totalRecords =
           action.payload.data.pagination.totalRecords;
         state.pagination.currentPage =
