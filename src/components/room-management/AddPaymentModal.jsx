@@ -32,7 +32,7 @@ const AddPaymentModal = ({ isOpen, onClose, onSubmit, isSubmitting = false }) =>
       type: '',
       amount: '',
       paidAmount: '',
-      status: 'unpaid',
+      status: '',
       paymentDate: new Date().toISOString().split('T')[0],
     },
   });

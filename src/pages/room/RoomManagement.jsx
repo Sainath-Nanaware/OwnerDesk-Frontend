@@ -8,7 +8,7 @@ import RemarksSection from '../../components/room-management/RemarksSection';
 import { MONTHS, getYears } from '../../validations/roomManagementValidation';
 import { useDispatch, useSelector } from 'react-redux';
 import { getUserID } from '../../features/auth/authService';
-import { allocateRoomAsyncThunk, deallocateRoomAsyncThunk, getRoomInfoAsyncThunk, updateRoomInfoAsyncThunk } from '../../features/roomManagement/roomManagementSlice';
+import { allocateRoomAsyncThunk, deallocateRoomAsyncThunk, deleteAdditionalChargeAsyncThunk, getRoomInfoAsyncThunk, updateAdditionalChargeAsyncThunk, updateElectricityBillAsyncThunk, updateRoomInfoAsyncThunk } from '../../features/roomManagement/roomManagementSlice';
 import { toast } from 'react-toastify';
 import Header from '../../components/layouts/Header';
 
@@ -253,18 +253,43 @@ const RoomManagement = () => {
      * Endpoint: PUT /api/rooms/:roomId/electricity
      * Body: electricity data
      */
-    const response = await fetch(`${API_BASE_URL}/rooms/${roomId}/electricity`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data),
-    });
-    const result = await response.json();
+    //   const response = await fetch(`${API_BASE_URL}/rooms/${roomId}/electricity`, {
+    //   method: 'PUT',
+    //   headers: { 'Content-Type': 'application/json' },
+    //   body: JSON.stringify(data),
+    // });
+    // const result = await response.json();
+    // console.log("electricity form data:",data)
+    const credentials={
+      ownerId:getUserID(),
+      propertyId:roomManagementStore.propertyInfo._id,
+      roomId:roomId,
+      tenantId: roomManagementStore.tenantInfo._id || null,
+      month:selectedMonth,
+      year:selectedYear,
+      previousReading:data.previousReading || 0,
+      currentReading:data.currentReading ||0,
+      rate:data.ratePerUnit||0,
+      charges:[
+        {
+            type: "Electricity",
+            amount:((data.currentReading || 0) - (data.previousReading || 0)) * (data).ratePerUnit || 0,
+            paidAmount:data.paidAmount ||0,
+            paidDate:data.paymentDate || 'N/A'
+        }
+      ]
+    }
+    const resultActionUpdateElectricityBill=await dispatch(updateElectricityBillAsyncThunk(credentials))
+      if (updateElectricityBillAsyncThunk.fulfilled.match(resultActionUpdateElectricityBill)){
+          // setPaymentData(result.data);
+          toast.success('Electricity bill updated successfully!');
+          window.location.reload();//for re-load page 
 
-    if (result.success) {
-      setPaymentData(result.data);
-      alert('✅ Electricity bill updated successfully!');
     } else {
-      throw new Error(result.message);
+      const errorMessage = 
+          updateElectricityBillAsyncThunk.payload||  
+          "Failed to update ElectrcityBill.";
+        toast.error(errorMessage);
     }
   };
 
@@ -279,18 +304,56 @@ const RoomManagement = () => {
      * Endpoint: POST /api/rooms/:roomId/payments
      * Body: payment data
      */
-    const response = await fetch(`${API_BASE_URL}/rooms/${roomId}/payments`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data),
-    });
-    const result = await response.json();
+    // const response = await fetch(`${API_BASE_URL}/rooms/${roomId}/payments`, {
+    //   method: 'POST',
+    //   headers: { 'Content-Type': 'application/json' },
+    //   body: JSON.stringify(data),
+    // });
+    // const result = await response.json();
 
-    if (result.success) {
-      setAdditionalPayments([...additionalPayments, result.data]);
-      alert('✅ Payment added successfully!');
+    console.log("new added payment data:",data);
+    // if (result.success) {
+    //   setAdditionalPayments([...additionalPayments, result.data]);
+    //   alert('✅ Payment added successfully!');
+    // } else {
+    //   alert('❌ Failed to add payment: ' + result.message);
+    // }
+    const cleanedCharges = (roomManagementStore.paymentStatus?.charges || []).map(
+           ({ referenceId, referenceModel, ...cleanCharge }) => cleanCharge
+         );
+
+    const credentials={
+      ownerId:getUserID(),
+      propertyId:roomManagementStore.propertyInfo._id,
+      roomId:roomId,
+      tenantId: roomManagementStore.tenantInfo._id || null,
+      month:selectedMonth,
+      year:selectedYear,
+      previousReading:roomManagementStore.electricityBill?.previousReading || 0,
+      currentReading:roomManagementStore.electricityBill?.currentReading ||0,
+      rate:roomManagementStore.electricityBill?.rate||0,
+      charges:[
+        ...cleanedCharges,
+        {
+        type:data.type,
+        amount:data.amount,
+        paidAmount:data.paidAmount,
+        paidDate:data.paymentDate,
+        status:data.status
+       }
+      ]
+    }
+    const resultActionUpdatePaymentDetails=await dispatch(updateElectricityBillAsyncThunk(credentials))
+      if (updateElectricityBillAsyncThunk.fulfilled.match(resultActionUpdatePaymentDetails)){
+          // setPaymentData(result.data);
+          toast.success('Payment added successfully!!');
+          window.location.reload();//for re-load page 
+
     } else {
-      alert('❌ Failed to add payment: ' + result.message);
+      const errorMessage = 
+          resultActionUpdatePaymentDetails.payload||  
+          "Failed add new Payment!";
+        toast.error(errorMessage);
     }
   };
 
@@ -305,20 +368,31 @@ const RoomManagement = () => {
      * Endpoint: PUT /api/rooms/:roomId/payments/:paymentId
      * Body: updates
      */
-    const response = await fetch(`${API_BASE_URL}/rooms/${roomId}/payments/${paymentId}`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(updates),
-    });
-    const result = await response.json();
+    // const response = await fetch(`${API_BASE_URL}/rooms/${roomId}/payments/${paymentId}`, {
+    //   method: 'PUT',
+    //   headers: { 'Content-Type': 'application/json' },
+    //   body: JSON.stringify(updates),
+    // });
+    // const result = await response.json();
 
-    if (result.success) {
-      setAdditionalPayments(
-        additionalPayments.map(p => p._id === paymentId ? result.data : p)
-      );
-    } else {
-      alert('❌ Failed to update payment: ' + result.message);
+    // if (result.success) {
+    //   setAdditionalPayments(
+    //     additionalPayments.map(p => p._id === paymentId ? result.data : p)
+    //   );
+    const credentials={
+      paymentStatusId: roomManagementStore.paymentStatus?._id,
+      chargeId:paymentId,
+      data:updates
     }
+    const resultActionUpdateAdditionalCharge=await dispatch(updateAdditionalChargeAsyncThunk(credentials))
+      if (updateAdditionalChargeAsyncThunk.fulfilled.match(resultActionUpdateAdditionalCharge)){
+          // setPaymentData(result.data);
+          toast.success('Payment details update successfully!!');
+          window.location.reload();//for re-load page 
+
+      }else {
+          toast.error('Failed to update payment details, please try again!:');
+      }
   };
 
   // ============================================
@@ -333,16 +407,31 @@ const RoomManagement = () => {
      * ============================================
      * Endpoint: DELETE /api/rooms/:roomId/payments/:paymentId
      */
-    const response = await fetch(`${API_BASE_URL}/rooms/${roomId}/payments/${paymentId}`, {
-      method: 'DELETE',
-    });
-    const result = await response.json();
+    // const response = await fetch(`${API_BASE_URL}/rooms/${roomId}/payments/${paymentId}`, {
+    //   method: 'DELETE',
+    // });
+    // const result = await response.json();
 
-    if (result.success) {
-      setAdditionalPayments(additionalPayments.filter(p => p._id !== paymentId));
-      alert('✅ Payment deleted successfully!');
-    } else {
-      alert('❌ Failed to delete payment: ' + result.message);
+    // if (result.success) {
+    //   setAdditionalPayments(additionalPayments.filter(p => p._id !== paymentId));
+    //   alert('✅ Payment deleted successfully!');
+    // } 
+    
+    
+    const credentials={
+      paymentStatusId: roomManagementStore.paymentStatus?._id,
+      chargeId:paymentId,
+    }
+    const resultActionDeleteAdditionalCharge=await dispatch(deleteAdditionalChargeAsyncThunk(credentials))
+      if (deleteAdditionalChargeAsyncThunk.fulfilled.match(resultActionDeleteAdditionalCharge)){
+          // setPaymentData(result.data);
+          toast.success('Payment details deleted successfully!!');
+          window.location.reload();//for re-load page 
+
+      }else {
+      //  alert('❌ Failed to delete payment: ' + result.message);
+      toast.error('Failed to delete payment details, please try again!:');
+
     }
   };
 

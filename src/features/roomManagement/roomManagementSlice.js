@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { allocateRoom, deallocateRoom, getRoomInfo, updateRoomInfo } from "../../api/apiRequests";
+import { allocateRoom, deallocateRoom, deleteAdditionalCharge, getRoomInfo, updateAdditionalCharge, updateElectricityBill, updateRoomInfo } from "../../api/apiRequests";
 
 export const getRoomInfoAsyncThunk = createAsyncThunk(
   "/getRoomInfo",
@@ -75,6 +75,59 @@ export const deallocateRoomAsyncThunk = createAsyncThunk(
   }
 );
 
+export const updateElectricityBillAsyncThunk = createAsyncThunk(
+  "/updateElectricictyBill",
+  async (credentials, thunkAPI) => {
+    try {
+      // console.log("Hi am in deallocateRoomAsyncThunk ");
+      console.log("pop:",credentials);
+      const response = await updateElectricityBill(credentials);
+      // console.log("deallocate room async thunk API response data:", response.data);
+      return response.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error);
+    }
+  }
+);
+
+export const updateAdditionalChargeAsyncThunk = createAsyncThunk(
+  "/updateAdditionalCharge",
+  async (credentials, thunkAPI) => {
+    try {
+      // console.log("Hi am in updateAdditionalChargeAsyncThunk ");
+      // console.log("pop:", credentials);
+      const response = await updateAdditionalCharge(
+        credentials.paymentStatusId,
+        credentials.chargeId,
+        credentials.data
+      );
+      // console.log(" updateAdditionalChargeAsyncThunk API response data:", response.data);
+      return response.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error);
+    }
+  }
+);
+
+export const deleteAdditionalChargeAsyncThunk = createAsyncThunk(
+  "/deleteAdditionalCharge",
+  async (credentials, thunkAPI) => {
+    try {
+      // console.log("Hi am in deleteAdditionalChargeAsyncThunk ");
+      // console.log("pop:", credentials);
+      const response = await deleteAdditionalCharge(
+        credentials.paymentStatusId,
+        credentials.chargeId
+      );
+      // console.log(" deleteAdditionalChargeAsyncThunk API response data:", response.data);
+      return response.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error);
+    }
+  }
+);
+
+
 const roomManagementSlice = createSlice({
   name: "roomManagemenet",
   initialState: {
@@ -82,7 +135,7 @@ const roomManagementSlice = createSlice({
     roomInfo: {},
     tenantInfo: {},
     electricityBill: {},
-    paymentStatus: {},
+    paymentStatus: [],
     roomAllocate:1,
     roomDeallocate:1,
     error: false,
@@ -93,11 +146,11 @@ const roomManagementSlice = createSlice({
     builder
       .addCase(getRoomInfoAsyncThunk.fulfilled, (state, action) => {
         // console.log("pp", action.payload.data.paymentStatus);
-        state.propertyInfo = action.payload.data?.property ?? {};
-        state.roomInfo = action.payload.data?.room ?? {};
+        state.propertyInfo = action.payload.data?.property ?? null;
+        state.roomInfo = action.payload.data?.room ?? null;
         state.tenantInfo = action.payload.data?.tenant ?? null;
-        state.electricityBill = action.payload.data?.electricityBill ?? {};
-        state.paymentStatus = action.payload.data?.paymentStatus ?? {};
+        state.electricityBill = action.payload.data?.electricityBill ?? 0;
+        state.paymentStatus = action.payload.data?.paymentStatus ?? [];
         state.error = false;
         state.loading = false;
       })

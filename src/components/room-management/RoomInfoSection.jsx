@@ -237,7 +237,7 @@ const RoomInfoSection = ({
         {/* ===== TENANT INFO ===== */}
         <div className="mt-4 pt-4 border-t border-gray-200">
           <div className="flex items-center justify-between mb-3">
-            <h3 className="text-sm font-semibold text-gray-700">Tenant Information</h3>
+            <h3 className="text-sm font-semibold text-gray-700">Current Tenant Information</h3>
             {!isEditing && (
               <button
                 type="button"

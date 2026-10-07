@@ -52,7 +52,7 @@ export const electricityBillSchema = yup.object({
   status: yup
     .string()
     .required("Status is required")
-    .oneOf(["paid", "partial", "unpaid"], "Invalid status"),
+    .oneOf(["paid", "unpaid"], "Invalid status"),
 });
 
 // ============================================
@@ -70,8 +70,9 @@ export const additionalPaymentSchema = yup.object({
     .min(0, "Paid amount cannot be negative"),
   status: yup
     .string()
-    .required("Status is required")
-    .oneOf(["paid", "partial", "unpaid"], "Invalid status"),
+    // .required("Status is required")
+    // .oneOf(["partially_paid", "paid", "unpaid"], "Invalid status"),
+    ,
   paymentDate: yup.string().required("Payment date is required"),
 });
 
@@ -101,10 +102,11 @@ export const ROOM_TYPES = [
 // PAYMENT TYPES
 // ============================================
 export const PAYMENT_TYPES = [
-  { value: "water", label: "Water Bill" },
-  { value: "wifi", label: "WiFi Bill" },
-  { value: "motor", label: "Motor Bill" },
-  { value: "maintenance", label: "Maintenance" },
+  { value: "Water", label: "Water Bill" },
+  { value: "WiFi", label: "WiFi Bill" },
+  { value: "Motor", label: "Motor Bill" },
+  { value: "Maintenance", label: "Maintenance" },
+  { value: "Parking", label: "Parking Bill" },
   { value: "other", label: "Other" },
 ];
 
@@ -113,7 +115,7 @@ export const PAYMENT_TYPES = [
 // ============================================
 export const PAYMENT_STATUS = [
   { value: "paid", label: "Paid", color: "green" },
-  { value: "partial", label: "Partially Paid", color: "yellow" },
+  // { value: "partially_paid", label: "Partially Paid", color: "yellow" },
   { value: "unpaid", label: "Unpaid", color: "red" },
 ];
 

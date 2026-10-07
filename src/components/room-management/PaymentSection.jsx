@@ -49,6 +49,14 @@ const PaymentSection = ({
   const [editingPaymentId, setEditingPaymentId] = useState(null);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  //for update additional payment we create state for form data
+  const [additionalChargeUpdateData,setAddChargeUpdatedData]=useState({
+    amount:0,
+    paidAmount:0,
+    status:null,
+    date:null,
+    
+  })
 
   // ============================================
   // REACT HOOK FORM SETUP
@@ -77,13 +85,13 @@ const PaymentSection = ({
   // ============================================
   // HANDLE EDIT ELECTRICITY
   // ============================================
-  console.log("elecBill",electricityBill);
+  // console.log("elecBill",electricityBill);
   const handleEditElectricity = () => {
     reset({
-      currentReading: electricityBill.currentReading || '',
-      previousReading: electricityBill.previousReading || '',
-      ratePerUnit: electricityBill.rate || '',
-      paidAmount: paymentData.paidAmount || '',
+      currentReading: electricityBill.currentReading || 0,
+      previousReading: electricityBill.previousReading || 0,
+      ratePerUnit: electricityBill.rate || 0,
+      paidAmount: paymentData.paidAmount || 0,
       paymentDate: paymentData.paymentDate || new Date().toISOString().split('T')[0],
       status: paymentData.status || 'unpaid',
     });
@@ -142,7 +150,7 @@ const PaymentSection = ({
   // ============================================
   // RENDER ELECTRICITY FIELD
   // ============================================
-  const renderElectricityField = (label, name, type = 'text') => {
+  const renderElectricityField = (label, name, type = 'text',displayValue = '') => {
     const isFieldValid = showSuccessIcon(name);
     const isFieldError = touchedFields[name] && errors[name];
 
@@ -154,7 +162,7 @@ const PaymentSection = ({
         <div className="relative">
           {isEditingElectricity ? (
             <input
-              {...register(name)}
+              {...register(name || '')}
               type={type}
               className={`
                 w-full px-4 py-2.5 bg-gray-50 border-2 rounded-xl 
@@ -170,7 +178,8 @@ const PaymentSection = ({
             />
           ) : (
             <div className="w-full px-4 py-2.5 bg-gray-50 rounded-xl text-gray-700">
-              {name || 'N/A'}
+              {/* {name || 'N/A'} */}
+              {displayValue !== null && displayValue !== undefined && displayValue !== '' ? displayValue : 0}
             </div>
           )}
           
@@ -204,7 +213,7 @@ const PaymentSection = ({
             </div>
             <div>
               <p className="font-semibold text-gray-900 capitalize">{payment.type} Bill</p>
-              <p className="text-xs text-gray-500">Date: {payment.paymentDate}</p>
+              <p className="text-xs text-gray-500">Date: {payment.paidDate ? new Date(payment.paidDate).toISOString().split("T")[0] : "-"}</p>
             </div>
           </div>
           <div className="flex items-center gap-2">
@@ -241,7 +250,7 @@ const PaymentSection = ({
           </div>
           <div>
             <p className="text-xs text-gray-500">Payment Date</p>
-            <p className="text-sm font-medium text-gray-700">{payment.paymentDate}</p>
+            <p className="text-sm font-medium text-gray-700">{payment.paidDate ? new Date(payment.paidDate).toISOString().split("T")[0] : "-"}</p>
           </div>
         </div>
 
@@ -253,26 +262,39 @@ const PaymentSection = ({
                 <label className="text-xs text-gray-500 block">Amount</label>
                 <input
                   type="number"
-                  defaultValue={payment.amount}
+                  defaultValue={0}
                   className="w-full px-3 py-1.5 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                  onChange={(e) => onUpdatePayment(payment._id, { amount: parseFloat(e.target.value) })}
+                  onChange={(e) => setAddChargeUpdatedData((prev) => ({
+                                ...prev,
+                              amount: parseFloat(e.target.value),
+                            }))}
                 />
               </div>
               <div>
                 <label className="text-xs text-gray-500 block">Paid Amount</label>
                 <input
                   type="number"
-                  defaultValue={payment.paidAmount}
+                  defaultValue={0}
                   className="w-full px-3 py-1.5 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                  onChange={(e) => onUpdatePayment(payment._id, { paidAmount: parseFloat(e.target.value) })}
+                  onChange={(e) =>
+                            setAddChargeUpdatedData((prev) => ({
+                              ...prev,
+                              paidAmount: parseFloat(e.target.value),
+                            }))
+                          }
                 />
               </div>
               <div>
                 <label className="text-xs text-gray-500 block">Status</label>
                 <select
-                  defaultValue={payment.status}
+                  // defaultValue={payment.status}
                   className="w-full px-3 py-1.5 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                  onChange={(e) => onUpdatePayment(payment._id, { status: e.target.value })}
+                  onChange={(e) =>
+                                  setAddChargeUpdatedData((prev) => ({
+                                    ...prev,
+                                    status: e.target.value,
+                                  }))
+                                }
                 >
                   {PAYMENT_STATUS.map((s) => (
                     <option key={s.value} value={s.value}>{s.label}</option>
@@ -283,14 +305,32 @@ const PaymentSection = ({
                 <label className="text-xs text-gray-500 block">Date</label>
                 <input
                   type="date"
-                  defaultValue={payment.paymentDate}
+                  // defaultValue={payment.paidDate ? new Date(payment.paidDate).toISOString().split("T")[0] : "-"}
                   className="w-full px-3 py-1.5 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                  onChange={(e) => onUpdatePayment(payment._id, { paymentDate: e.target.value })}
+                  onChange={(e) =>
+                            setAddChargeUpdatedData((prev) => ({
+                              ...prev,
+                              paidDate: e.target.value,
+                            }))
+                          }
                 />
               </div>
             </div>
             <button
-              onClick={() => setEditingPaymentId(null)}
+              onClick={() =>{
+                //sen updated data 
+                onUpdatePayment(payment._id,additionalChargeUpdateData)
+                // Reset state after successful API call
+                setAddChargeUpdatedData({
+                  amount: 0,
+                  paidAmount: 0,
+                  status: null,
+                  paidDate: null,
+                });
+                // Close edit mode
+                setEditingPaymentId(null)
+
+              }}
               className="mt-2 px-4 py-1.5 bg-indigo-600 text-white rounded-lg text-sm font-medium hover:bg-indigo-700 transition-colors"
             >
               Done Editing
@@ -339,6 +379,22 @@ const PaymentSection = ({
 
   const summary = calculateSummary();
 
+  const getPaymentValue = (paymentsArray = [], typeName = '', fieldKey = '') => {
+  if (!Array.isArray(paymentsArray) || !typeName || !fieldKey) return '';
+
+  const targetType = typeName.trim().toLowerCase();
+
+  // Find matching payment item
+  const foundItem = paymentsArray.find(
+    (item) => item?.type?.trim().toLowerCase() === targetType
+  );
+
+  // Return specific property or empty string if not found
+  return foundItem?.[fieldKey] || '';
+};
+// console.log("electrcity payment amount:",getPaymentValue(paymentData?.charges,'Electricity','paidAmount'));
+
+
   return (
     <div className="space-y-6">
       {/* ===== ELECTRICITY BILL ===== */}
@@ -366,9 +422,9 @@ const PaymentSection = ({
 
         <form onSubmit={handleSubmit(handleElectricitySubmit)}>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {renderElectricityField('Current Reading', electricityBill.currentReading, 'number')}
-            {renderElectricityField('Previous Reading', electricityBill.previousReading, 'number')}
-            {renderElectricityField('Rate Per Unit (₹)', electricityBill.rate, 'number')}
+           {renderElectricityField('Current Reading', 'currentReading', 'number', electricityBill?.currentReading)}
+            {renderElectricityField('Previous Reading', 'previousReading', 'number', electricityBill?.previousReading)}
+            {renderElectricityField('Rate Per Unit (₹)', 'ratePerUnit', 'number', electricityBill?.rate)}
             
             {/* Calculated fields */}
             <div>
@@ -379,12 +435,12 @@ const PaymentSection = ({
             </div>
             <div>
               <label className="text-sm font-medium text-gray-700 block mb-1.5">Total Amount (₹)</label>
-              <div className="w-full px-4 py-2.5 bg-gray-100 rounded-xl text-gray-700 font-bold text-indigo-600">
+              <div className="w-full px-4 py-2.5 bg-gray-100 rounded-xl font-bold text-indigo-600">
                 ₹{((electricityBill.currentReading || 0) - (electricityBill.previousReading || 0)) * (electricityBill.rate || 0)}
               </div>
             </div>
-            {renderElectricityField('Paid Amount (₹)', 'paidAmount', 'number')}
-            {renderElectricityField('Payment Date', 'paymentDate', 'date')}
+            {renderElectricityField('Paid Amount (₹)', 'paidAmount', 'number',  getPaymentValue(paymentData?.charges,'Electricity','paidAmount')|| "N/A")}
+            {renderElectricityField('Payment Date', 'paymentDate', 'date', getPaymentValue(paymentData?.charges,'Electricity','paidDate').slice(0, 10)|| "N/A")}
             
             <div>
               <label className="text-sm font-medium text-gray-700 block mb-1.5">Status</label>
@@ -399,7 +455,7 @@ const PaymentSection = ({
                 </select>
               ) : (
                 <div className={`w-full px-4 py-2.5 rounded-xl text-center font-semibold ${getStatusColor(paymentData.status)}`}>
-                  {paymentData.status || 'N/A'}
+                  { getPaymentValue(paymentData?.charges,'Electricity','status')|| 'N/A'}
                 </div>
               )}
             </div>

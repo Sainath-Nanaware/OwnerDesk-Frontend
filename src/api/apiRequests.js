@@ -39,6 +39,21 @@ export const allocateRoom = (data) =>
 export const deallocateRoom = (data) =>
   axiosClient.patch(`/room/deallocate`,data);
 
+//we use single API for update and create electricity bill
+export const updateElectricityBill = (data) =>
+  axiosClient.post(`/electBill/add`,data);
+
+//update single additional charge 
+export const updateAdditionalCharge = (paymentStatusId, chargeId, data) =>
+  axiosClient.patch(
+    `/electBill/additionalCharges/${paymentStatusId}/charge/${chargeId}`,data
+  );
+
+//delete single additional charge
+export const deleteAdditionalCharge = (paymentStatusId, chargeId) =>
+  axiosClient.delete(
+    `/electBill/paymentStatus/${paymentStatusId}/charge/${chargeId}`
+  );
 
 //Tenant API
 
