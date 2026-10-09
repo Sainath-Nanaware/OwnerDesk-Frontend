@@ -54,7 +54,7 @@ const RemarksSection = ({ remarks = '', onUpdate, isLoading = false }) => {
     <div className="bg-white rounded-2xl shadow-sm p-6 border border-gray-100">
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-gradient-to-br from-green-500 to-emerald-500 rounded-xl flex items-center justify-center">
+          <div className="w-10 h-10 bg-linear-to-br from-green-500 to-emerald-500 rounded-xl flex items-center justify-center">
             <FaStickyNote className="w-5 h-5 text-white" />
           </div>
           <div>
@@ -78,8 +78,9 @@ const RemarksSection = ({ remarks = '', onUpdate, isLoading = false }) => {
           <textarea
             value={tempRemarks}
             onChange={(e) => setTempRemarks(e.target.value)}
+            maxLength={200} // ✅ Maximum 200 characters
             placeholder="Write your remarks here..."
-            className="w-full px-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all resize-none min-h-[100px]"
+            className="w-full px-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all resize-none min-h-25"
           />
           <div className="flex gap-3">
             <button
@@ -92,7 +93,7 @@ const RemarksSection = ({ remarks = '', onUpdate, isLoading = false }) => {
             <button
               onClick={handleSave}
               disabled={isSubmitting}
-              className="flex-1 px-6 py-2.5 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl font-medium hover:shadow-lg hover:shadow-indigo-500/25 transition-all disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              className="flex-1 px-6 py-2.5 bg-linear-to-r from-indigo-600 to-purple-600 text-white rounded-xl font-medium hover:shadow-lg hover:shadow-indigo-500/25 transition-all disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2"
             >
               {isSubmitting ? (
                 <svg className="animate-spin w-5 h-5" viewBox="0 0 24 24">
@@ -109,7 +110,7 @@ const RemarksSection = ({ remarks = '', onUpdate, isLoading = false }) => {
           </div>
         </div>
       ) : (
-        <div className="bg-gray-50 rounded-xl p-4 min-h-[80px]">
+        <div className="bg-gray-50 rounded-xl p-4 min-h-20">
           {remarks ? (
             <p className="text-gray-700 whitespace-pre-wrap">{remarks}</p>
           ) : (

@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { allocateRoom, deallocateRoom, deleteAdditionalCharge, getRoomInfo, updateAdditionalCharge, updateElectricityBill, updateRoomInfo } from "../../api/apiRequests";
+import { allocateRoom, deallocateRoom, deleteAdditionalCharge, getRoomInfo, updateAdditionalCharge, updateElectricityBill, updateRemarks, updateRoomInfo } from "../../api/apiRequests";
 
 export const getRoomInfoAsyncThunk = createAsyncThunk(
   "/getRoomInfo",
@@ -120,6 +120,24 @@ export const deleteAdditionalChargeAsyncThunk = createAsyncThunk(
         credentials.chargeId
       );
       // console.log(" deleteAdditionalChargeAsyncThunk API response data:", response.data);
+      return response.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error);
+    }
+  }
+);
+
+export const updateRoomRemarksAsyncThunk = createAsyncThunk(
+  "/updateRoomRemarks",
+  async (credentials, thunkAPI) => {
+    try {
+      // console.log("Hi am in updateRemarksChargeAsyncThunk ");
+      // console.log("pop:", credentials);
+      const response = await updateRemarks(
+        credentials.roomId,
+        credentials.remarks
+      );
+      // console.log(" updateRemarksChargeAsyncThunk API response data:", response.data);
       return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error);

@@ -8,7 +8,7 @@ import RemarksSection from '../../components/room-management/RemarksSection';
 import { MONTHS, getYears } from '../../validations/roomManagementValidation';
 import { useDispatch, useSelector } from 'react-redux';
 import { getUserID } from '../../features/auth/authService';
-import { allocateRoomAsyncThunk, deallocateRoomAsyncThunk, deleteAdditionalChargeAsyncThunk, getRoomInfoAsyncThunk, updateAdditionalChargeAsyncThunk, updateElectricityBillAsyncThunk, updateRoomInfoAsyncThunk } from '../../features/roomManagement/roomManagementSlice';
+import { allocateRoomAsyncThunk, deallocateRoomAsyncThunk, deleteAdditionalChargeAsyncThunk, getRoomInfoAsyncThunk, updateAdditionalChargeAsyncThunk, updateElectricityBillAsyncThunk, updateRoomInfoAsyncThunk, updateRoomRemarksAsyncThunk } from '../../features/roomManagement/roomManagementSlice';
 import { toast } from 'react-toastify';
 import Header from '../../components/layouts/Header';
 
@@ -51,7 +51,7 @@ const RoomManagement = () => {
         setElectricityBillData(roomManagementStore.electricityBill)
         console.log("payment status info:",roomManagementStore.paymentStatus)
         setAdditionalPayments(roomManagementStore.paymentStatus.charges || []);
-        setRemarks(roomManagementStore.remarks || '');
+        setRemarks(roomManagementStore.roomInfo.remarks || '');
    },[roomManagementStore])
 
   // ============================================
@@ -446,18 +446,32 @@ const RoomManagement = () => {
      * Endpoint: PUT /api/rooms/:roomId/remarks
      * Body: { remarks: data.remarks }
      */
-    const response = await fetch(`${API_BASE_URL}/rooms/${roomId}/remarks`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data),
-    });
-    const result = await response.json();
 
-    if (result.success) {
-      setRemarks(data.remarks);
-      alert('✅ Remarks updated successfully!');
-    } else {
-      throw new Error(result.message);
+    
+    // const response = await fetch(`${API_BASE_URL}/rooms/${roomId}/remarks`, {
+    //   method: 'PUT',
+    //   headers: { 'Content-Type': 'application/json' },
+    //   body: JSON.stringify(data),
+    // });
+    // const result = await response.json();
+
+    // if (result.success) {
+    //   setRemarks(data.remarks);
+    //   alert('✅ Remarks updated successfully!');
+    // } 
+    const credentials={
+      roomId: roomId,
+      remarks:data,
+    }
+    const resultActionUpdateRoomRemarks=await dispatch(updateRoomRemarksAsyncThunk(credentials))
+      if (updateRoomRemarksAsyncThunk.fulfilled.match(resultActionUpdateRoomRemarks)){
+          // setPaymentData(result.data);
+          toast.success('remarks update successfully!!');
+          window.location.reload();//for re-load page 
+
+      }else {
+      // throw new Error(result.message);
+      toast.error("remarks not updated, please try again!")
     }
   };
 

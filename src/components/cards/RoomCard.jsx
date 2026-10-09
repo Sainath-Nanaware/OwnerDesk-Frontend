@@ -1,7 +1,7 @@
 // components/rooms/RoomCard.jsx
 import React from 'react';
 import { FaBed, FaUser, FaBuilding, FaMoneyBillWave, FaDoorOpen } from 'react-icons/fa';
-import { MdPerson, MdLocationOn } from 'react-icons/md';
+import { MdPerson, MdLocationOn,MdPhone  } from 'react-icons/md';
 
 /**
  * ============================================
@@ -17,14 +17,14 @@ import { MdPerson, MdLocationOn } from 'react-icons/md';
 const RoomCard = ({ room, rentStatus = 'unpaid' }) => {
   /**
    * ============================================
-   * RENT STATUS COLOR CONFIGURATION
+   * ROOM STATUS COLOR CONFIGURATION
    * ============================================
-   * Green: All rent received
-   * Orange/Yellow: Partial payment received
-   * Red: No payment received
+   * Green: room is occupied 
+   *
+   * Red: room is vaccant
    */
   const statusConfig = {
-    paid: {
+    true: {
       borderColor: 'border-green-500',
       shadowColor: 'shadow-green-500/20 hover:shadow-green-500/30',
       bgColor: 'bg-green-50',
@@ -32,15 +32,7 @@ const RoomCard = ({ room, rentStatus = 'unpaid' }) => {
       statusColor: 'text-green-700',
       dotColor: 'bg-green-500',
     },
-    partial: {
-      borderColor: 'border-yellow-500',
-      shadowColor: 'shadow-yellow-500/20 hover:shadow-yellow-500/30',
-      bgColor: 'bg-yellow-50',
-      statusText: 'Partial Received',
-      statusColor: 'text-yellow-700',
-      dotColor: 'bg-yellow-500',
-    },
-    unpaid: {
+    false: {
       borderColor: 'border-red-500',
       shadowColor: 'shadow-red-500/20 hover:shadow-red-500/30',
       bgColor: 'bg-red-50',
@@ -50,7 +42,7 @@ const RoomCard = ({ room, rentStatus = 'unpaid' }) => {
     },
   };
 
-  const config = statusConfig[rentStatus] || statusConfig.unpaid;
+  const config = statusConfig[room.isOccupied] || statusConfig.false;
 
   // Get room type label
   const getRoomTypeLabel = (type) => {
@@ -94,10 +86,10 @@ const RoomCard = ({ room, rentStatus = 'unpaid' }) => {
             </div>
           </div>
           
-          {/* ===== RENT STATUS BADGE ===== */}
+          {/* ===== OCCUPIED STATUS BADGE ===== */}
           <div className={`px-3 py-1 rounded-full text-xs font-semibold ${config.bgColor} ${config.statusColor} flex items-center gap-1.5`}>
             <span className={`w-1.5 h-1.5 rounded-full ${config.dotColor} animate-pulse`} />
-            {config.statusText}
+            {(room.isOccupied)?'Occupied':'Vacant'}
           </div>
         </div>
 
@@ -106,18 +98,19 @@ const RoomCard = ({ room, rentStatus = 'unpaid' }) => {
 
         {/* ===== TENANT INFO ===== */}
         <div className="space-y-2">
-          {room.tenant ? (
+          {room.currentTenantId ? (
             <div className="flex items-center gap-3 bg-gray-50 rounded-xl p-3">
-              <div className="w-10 h-10 bg-gradient-to-br from-indigo-100 to-purple-100 rounded-full flex items-center justify-center text-indigo-600 font-bold text-sm">
-                {room.tenant.name?.charAt(0) || 'T'}
+              <div className="w-10 h-10 bg-linear-to-br from-indigo-100 to-purple-100 rounded-full flex items-center justify-center text-indigo-600 font-bold text-sm">
+                {room.currentTenantId.fullName?.charAt(0) || 'T'}
               </div>
               <div className="flex-1">
                 <p className="text-sm font-semibold text-gray-900">
-                  {room.tenant.name || 'Unknown Tenant'}
+                  {room.currentTenantId.fullName || 'Unknown Tenant'}
                 </p>
                 <p className="text-xs text-gray-500 flex items-center gap-1">
-                  <MdPerson className="w-3 h-3" />
-                  Tenant ID: {room.tenant.id || 'N/A'}
+                  <MdPhone className="w-3 h-3" />
+                  {/* Tenant ID: {room.tenant.id || 'N/A'} */}
+                  <span>{room.currentTenantId.phone || 'N/A'}</span>
                 </p>
               </div>
             </div>
@@ -147,7 +140,7 @@ const RoomCard = ({ room, rentStatus = 'unpaid' }) => {
         </div>
 
         {/* ===== HOVER OVERLAY ===== */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+        <div className="absolute inset-0 bg-linear-to-t from-black/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
       </div>
     </div>
   );

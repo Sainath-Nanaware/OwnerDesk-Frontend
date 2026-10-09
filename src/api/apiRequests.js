@@ -55,6 +55,12 @@ export const deleteAdditionalCharge = (paymentStatusId, chargeId) =>
     `/electBill/paymentStatus/${paymentStatusId}/charge/${chargeId}`
   );
 
+//update room remarks info
+export const updateRemarks = (roomId,data) =>
+  axiosClient.patch(
+    `/room/remarks/${roomId}`,data
+  );
+  
 //Tenant API
 
 export const getAllTenantList = (ownerID, searchParameters) =>
