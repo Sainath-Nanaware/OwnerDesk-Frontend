@@ -1,5 +1,6 @@
 // components/dashboard/StatsCard.jsx
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 /**
  * ============================================
@@ -15,8 +16,9 @@ import React from 'react';
  * @param {string} props.textColor - Text color class
  */
 
-const StatsCard = ({ label, value, icon, bgColor = 'bg-blue-50', textColor = 'text-blue-600' }) => {
+const StatsCard = ({ label, value, icon, bgColor = 'bg-blue-50', textColor = 'text-blue-600', linkAddress }) => {
   return (
+    <Link to={linkAddress}>
     <div className="bg-white rounded-2xl shadow-sm p-6 border border-gray-100 hover:shadow-lg transition-all duration-300 hover:-translate-y-1 cursor-pointer">
       <div className="flex items-center justify-between">
         <div>
@@ -28,6 +30,7 @@ const StatsCard = ({ label, value, icon, bgColor = 'bg-blue-50', textColor = 'te
         </div>
       </div>
     </div>
+    </Link>
   );
 };
 

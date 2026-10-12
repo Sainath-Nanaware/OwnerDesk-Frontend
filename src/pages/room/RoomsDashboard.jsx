@@ -80,7 +80,7 @@ const RoomsDashboard = () => {
           hasNextPage: roomStore.pagination.hasNextPage,
           hasPreviousPage: roomStore.pagination.hasPreviousPage
     });
-    console.log("set Rooms bhau:",roomStore.allRooms)
+    // console.log("set Rooms bhau:",roomStore.allRooms)
     
   },[roomStore])
 

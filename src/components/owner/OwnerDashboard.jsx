@@ -9,7 +9,7 @@ import {
   FaChevronLeft,
   FaChevronRight
 } from 'react-icons/fa';
-import { FaBed } from 'react-icons/fa';
+import { FaBed, FaUsers, FaArrowRight    } from 'react-icons/fa';
 import StatsCard from '../cards/StatsCard';
 import PropertyCard from '../cards/PropertyCard';
 import PropertyForm from '../forms/PropertyForm';
@@ -439,15 +439,17 @@ const OwnerDashboard = () => {
             icon={<FaBuilding className="w-6 h-6" />}
             bgColor="bg-blue-50"
             textColor="text-blue-600"
-          />
-          {/* <StatsCard 
-            label="Total Rooms"
-            value={totalRooms}
-            icon={<FaBed className="w-6 h-6" />}
-            bgColor="bg-green-50"
-            textColor="text-green-600"
+            linkAddress='/ownerhome'
           />
           <StatsCard 
+            label="View and manage your"
+            value="Tenants"
+            icon={<FaUsers  className="w-6 h-6" />}
+            bgColor="bg-green-50"
+            textColor="text-green-600"
+            linkAddress='/tenants'
+          />
+          {/* <StatsCard 
             label="Monthly Revenue"
             value={`₹${totalRevenue.toLocaleString()}`}
             icon={<FaMoneyBillWave className="w-6 h-6" />}
