@@ -67,3 +67,8 @@ export const getAllTenantList = (ownerID, searchParameters) =>
   axiosClient.get(
     `/tenant/info/${ownerID}/all?${searchParameters}`
   );
+
+export const createTenant = (data) => axiosClient.post(`/tenant/add`,data);
+
+export const getTenantInfo = (ownerId, tenantId) =>
+  axiosClient.get(`tenant/${ownerId}/${tenantId}`);

@@ -22,11 +22,11 @@ const TenantRoomInfo = ({ roomInfo }) => {
   // ============================================
   const getRoomTypeLabel = (type) => {
     const types = {
-      '1rk': '1 RK',
-      '1bhk': '1 BHK',
-      '2bhk': '2 BHK',
-      '3bhk': '3 BHK',
-      studio: 'Studio',
+      '1RK': '1 RK',
+      '1BHK': '1 BHK',
+      '2BHK': '2 BHK',
+      '3BHK': '3 BHK',
+      'studio': 'Studio',
     };
     return types[type] || type;
   };

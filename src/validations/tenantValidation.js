@@ -26,7 +26,7 @@ export const tenantSchema = yup.object({
   phone: yup
     .string()
     .required("Phone number is required")
-    .matches(/^[0-9]{10}$/, "Please enter a valid 10-digit phone number"),
+    .matches(/^[6-9]\d{9}$/, "Please enter a valid 10-digit phone number"),
 
   /**
    * EMAIL - Required, valid email format
@@ -47,7 +47,7 @@ export const tenantSchema = yup.object({
     .string()
     .required("ID proof type is required")
     .oneOf(
-      ["aadhar", "pan", "passport", "voterid", "drivinglicence", "other"],
+      ["Aadhaar", "PAN", "Passport", "DrivingLicense", "VoterID", "Other"],
       "Invalid ID proof type"
     ),
 
@@ -66,15 +66,15 @@ export const tenantSchema = yup.object({
  * ID PROOF TYPES - Match your backend enum
  * ============================================
  */
+//take values as backend if we want to change (change in backend DB model and joi also)
 export const ID_PROOF_TYPES = [
-  { value: "aadhar", label: "Aadhar Card" },
-  { value: "pan", label: "PAN Card" },
-  { value: "passport", label: "Passport" },
-  { value: "voterid", label: "Voter ID" },
-  { value: "drivinglicence", label: "Driving Licence" },
-  { value: "other", label: "Other" },
+  { value: "Aadhaar", label: "Aadhar Card" },
+  { value: "PAN", label: "PAN Card" },
+  { value: "Passport", label: "Passport" },
+  { value: "VoterID", label: "Voter ID" },
+  { value: "DrivingLicense", label: "Driving Licence" },
+  { value: "Other", label: "Other" },
 ];
-
 /**
  * ============================================
  * TENANT STATUS - Match your backend enum
@@ -82,6 +82,6 @@ export const ID_PROOF_TYPES = [
  */
 export const TENANT_STATUS = [
   { value: "all", label: "All" },
-  { value: "active", label: "Active" },
-  { value: "inactive", label: "Inactive" },
+  { value: "Active", label: "Active" },
+  { value: "Inactive", label: "Inactive" },
 ];

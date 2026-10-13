@@ -5,6 +5,11 @@ import { FaEdit, FaTimes, FaArrowLeft } from 'react-icons/fa';
 import TenantInfoCard from '../../components/cards/TenantInfoCard';
 import TenantRoomInfo from '../../components/tenant/TenantRoomInfo';
 import TenantForm from '../../components/forms/TenantForm';
+import { getUserID } from '../../features/auth/authService';
+import { getTenantInfoAsyncThunk } from '../../features/tenant/tenantSlice';
+import { toast } from 'react-toastify';
+import { useDispatch, useSelector } from 'react-redux';
+import Header from '../../components/layouts/Header';
 
 // ============================================
 // TENANT DETAILS PAGE
@@ -15,6 +20,10 @@ const TenantDetails = () => {
   // ============================================
   const { tenantId } = useParams();
 
+  const tenantStore=useSelector((state)=>state.tenant)
+  const dispatch=useDispatch()
+
+
   // ============================================
   // STATE MANAGEMENT
   // ============================================
@@ -24,10 +33,23 @@ const TenantDetails = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+
+  //update store data required time so we handle store updated data using useEffect
+  useEffect(()=>{
+    setTenant(tenantStore.tenantInfo);
+    const roomAndPropertyInfo={
+      ...tenantStore.roomInfo,
+      ...tenantStore.propertyInfo
+    }
+    setRoomInfo(roomAndPropertyInfo || null);
+    
+  },[tenantStore])
+
+
   // ============================================
   // API BASE URL
   // ============================================
-  const API_BASE_URL = 'https://your-api.com/api'; // CHANGE THIS
+  // const API_BASE_URL = 'https://your-api.com/api'; // CHANGE THIS
 
   // ============================================
   // FETCH TENANT DETAILS
@@ -49,18 +71,28 @@ const TenantDetails = () => {
        *   }
        * }
        */
-      const response = await fetch(`${API_BASE_URL}/tenants/${tenantId}`);
-      const result = await response.json();
+      // const response = await fetch(`${API_BASE_URL}/tenants/${tenantId}`);
+      // const result = await response.json();
 
-      if (result.success) {
-        setTenant(result.data.tenant);
-        setRoomInfo(result.data.roomInfo || null);
-      } else {
-        alert('Failed to fetch tenant details: ' + result.message);
-      }
+      // if (result.success) {
+      //   setTenant(result.data.tenant);
+      //   setRoomInfo(result.data.roomInfo || null);
+      // } 
+       const credentials ={
+        ownerId:getUserID(),
+        tenantId:tenantId
+        }
+        const resultActionGetTenantInfo=await dispatch(getTenantInfoAsyncThunk(credentials))
+        if (getTenantInfoAsyncThunk.fulfilled.match(resultActionGetTenantInfo)){
+            // setTenants(tenantStore.allTenantList);
+
+            
+        }else {
+          toast.error('Failed to fetch tenant details:please try again! ');
+        }
     } catch (error) {
       console.error('Error fetching tenant details:', error);
-      alert('Error fetching tenant details. Please try again.');
+      toast.error('Error fetching tenant details. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -144,6 +176,8 @@ const TenantDetails = () => {
   }
 
   return (
+    <>
+    <Header isLoggedIn={true} />
     <div className="min-h-screen bg-[#f5f5f5]">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         {/* ===== HEADER ===== */}
@@ -177,7 +211,7 @@ const TenantDetails = () => {
         <TenantInfoCard tenant={tenant} />
 
         {/* ===== ROOM INFO (only if tenant is active) ===== */}
-        {tenant.status === 'active' && roomInfo && (
+        {tenant.status === 'Active' && roomInfo && (
           <div className="mt-6">
             <TenantRoomInfo roomInfo={roomInfo} />
           </div>
@@ -240,6 +274,7 @@ const TenantDetails = () => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 

@@ -11,6 +11,7 @@ import OwnerHomePage from './pages/owner/OwnerHomePage';
 import RoomsDashboard from './pages/room/RoomsDashboard';
 import RoomManagement from './pages/room/RoomManagement';
 import TenantsList from './pages/tenant/TenantsList';
+import TenantDetails from './pages/tenant/TenantDetails';
 
 
 function App() {
@@ -26,6 +27,7 @@ function App() {
         <Route path='/property/:propertyId/rooms' element={<RoomsDashboard/>}/>
         <Route path='/roomInfo/:roomId' element={<RoomManagement/>}/>
         <Route path='/tenants' element={<TenantsList/>}/>
+        <Route path='/tenant/:tenantId' element={<TenantDetails/>}/>
       </Routes>
       <ToastContainer position="top-right" autoClose={3000} />
     </>

@@ -55,6 +55,20 @@ const TenantForm = ({
     },
   });
 
+  
+  //following logic for when user submit form fields clear when he create new room he get clear form 
+  useEffect(()=>{
+    if(isSubmitting){
+      reset({
+      fullName: '',
+      phone: '',
+      email: '',
+      idProofType: '',
+      idProofNumber: '',
+    })
+    }
+  },[isSubmitting])
+
   // ============================================
   // POPULATE FORM WHEN EDITING
   // ============================================
@@ -217,7 +231,7 @@ const TenantForm = ({
         <button
           type="submit"
           disabled={isSubmitting || !isValid}
-          className="flex-1 px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-indigo-500/25 transition-all disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+          className="flex-1 px-6 py-3 bg-linear-to-r from-indigo-600 to-purple-600 text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-indigo-500/25 transition-all disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2"
         >
           {isSubmitting ? (
             <>

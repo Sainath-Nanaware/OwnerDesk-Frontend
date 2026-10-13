@@ -39,14 +39,14 @@ const TenantInfoCard = ({ tenant }) => {
   // STATUS CONFIG
   // ============================================
   const statusConfig = {
-    active: {
+    Active: {
       bgColor: 'bg-green-50',
       textColor: 'text-green-700',
       borderColor: 'border-green-200',
       icon: <FaCheckCircle className="w-4 h-4" />,
       label: 'Active',
     },
-    inactive: {
+    Inactive: {
       bgColor: 'bg-gray-100',
       textColor: 'text-gray-600',
       borderColor: 'border-gray-200',
@@ -55,7 +55,7 @@ const TenantInfoCard = ({ tenant }) => {
     },
   };
 
-  const config = statusConfig[tenant.status] || statusConfig.inactive;
+  const config = statusConfig[tenant.status] || statusConfig.Inactive;
 
   // ============================================
   // INFO ROWS
@@ -119,7 +119,7 @@ const TenantInfoCard = ({ tenant }) => {
               key={index}
               className="bg-gray-50 rounded-xl p-4 flex items-start gap-3"
             >
-              <div className="w-9 h-9 bg-indigo-50 rounded-lg flex items-center justify-center text-indigo-600 flex-shrink-0">
+              <div className="w-9 h-9 bg-indigo-50 rounded-lg flex items-center justify-center text-indigo-600 shrink-0">
                 {item.icon}
               </div>
               <div className="flex-1 min-w-0">

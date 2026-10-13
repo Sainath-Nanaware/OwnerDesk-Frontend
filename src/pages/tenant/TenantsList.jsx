@@ -16,7 +16,7 @@ import TenantCard from '../../components/cards/TenantCard';
 import TenantSearch from '../../components/tenant/TenantSearch';
 import TenantForm from '../../components/forms/TenantForm';
 import Header from '../../components/layouts/Header';
-import { getAllTenantListAsyncThunk } from '../../features/tenant/tenantSlice';
+import { createNewTenantAsyncThunk, getAllTenantListAsyncThunk } from '../../features/tenant/tenantSlice';
 import { toast } from 'react-toastify';
 import { useDispatch, useSelector } from 'react-redux';
 import { getUserID } from '../../features/auth/authService';
@@ -105,7 +105,7 @@ const TenantsList = () => {
        */
       const params = new URLSearchParams();
       params.append('page', page);
-      params.append('limit', 10);
+      params.append('limit', 8);
       if (filterParams.name) params.append('search', filterParams.name);
       if (filterParams.status && filterParams.status !== 'all') {
         params.append('status', filterParams.status);
@@ -128,7 +128,7 @@ const TenantsList = () => {
     //     });
          
     
-        console.log("get tenant API params",params)
+        // console.log("get tenant API params",params)
         const credentials ={
         ownerID:getUserID(),
         searchParameters:`${params}`
@@ -193,23 +193,42 @@ const TenantsList = () => {
        * Endpoint: POST /api/tenants
        * Body: tenant data (status is auto 'inactive' on backend)
        */
-      const response = await fetch(`${API_BASE_URL}/tenants`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
-      });
-      const result = await response.json();
+      // const response = await fetch(`${API_BASE_URL}/tenants`, {
+      //   method: 'POST',
+      //   headers: { 'Content-Type': 'application/json' },
+      //   body: JSON.stringify(data),
+      // });
+      // const result = await response.json();
 
-      if (result.success) {
-        alert('✅ Tenant created successfully!');
-        setIsDrawerOpen(false);
-        fetchTenants(pagination.currentPage, filters);
-      } else {
-        alert('❌ Failed to create tenant: ' + result.message);
+      // if (result.success) {
+      //   alert('✅ Tenant created successfully!');
+      //   setIsDrawerOpen(false);
+      //   fetchTenants(pagination.currentPage, filters);
+      // }
+        data.ownerId=getUserID();
+        // data.status="Inactive"//new tenant status muast be Inactive
+        const credentials ={
+        data:data
+        }
+        const resultActionCreateTenant=await dispatch(createNewTenantAsyncThunk(credentials))
+        if (createNewTenantAsyncThunk.fulfilled.match(resultActionCreateTenant)){
+          toast.success('Tenant created successfully!');
+          setIsDrawerOpen(false);
+          fetchTenants(pagination.currentPage, filters);    
+        } else {
+         // ✅ Get the actual error message from Redux
+         console.log("response payload",resultActionCreateTenant.payload)
+        const errorMessage =
+          resultActionCreateTenant.payload ||
+          resultActionCreateTenant.error?.message ||
+          'Something went wrong while creating the tenant.';
+
+        // ✅ Show the error message in toast
+        toast.error(`Failed to create tenant: ${errorMessage}`);
       }
     } catch (error) {
       console.error('Error creating tenant:', error);
-      alert('❌ Error: ' + error.message);
+      toast.error('❌ Error: ' + error.message);
     } finally {
       setIsSubmitting(false);
     }
