@@ -72,3 +72,6 @@ export const createTenant = (data) => axiosClient.post(`/tenant/add`,data);
 
 export const getTenantInfo = (ownerId, tenantId) =>
   axiosClient.get(`tenant/${ownerId}/${tenantId}`);
+
+export const updateTenant = (tenantId, data) =>
+  axiosClient.patch(`/tenant/update/${tenantId}`,data);

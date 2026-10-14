@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { createTenant, getAllTenantList, getTenantInfo } from "../../api/apiRequests";
+import { createTenant, getAllTenantList, getTenantInfo, updateTenant } from "../../api/apiRequests";
 
 export const getAllTenantListAsyncThunk=createAsyncThunk(
  "/getAllTenantList",
@@ -44,9 +44,27 @@ export const getTenantInfoAsyncThunk = createAsyncThunk(
   async (credentials, thunkAPI) => {
     try {
       // console.log("Hi am in getTenantInfo AsyncThunk ");
-      console.log(credentials);
+      // console.log(credentials);
       const response = await getTenantInfo(credentials.ownerId,credentials.tenantId);
       // console.log("get tenant info thunk API response data:", response.data);
+      return response.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error);
+    }
+  }
+);
+
+export const updateTenantAsyncThunk = createAsyncThunk(
+  "/updateTenant",
+  async (credentials, thunkAPI) => {
+    try {
+      // console.log("Hi am in updateTenantInfo AsyncThunk ");
+      console.log(credentials);
+      const response = await updateTenant(
+        credentials.tenantId,
+        credentials.data
+      );
+      // console.log("update tenant info thunk API response data:", response.data);
       return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error);

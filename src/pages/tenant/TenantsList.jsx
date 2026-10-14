@@ -217,7 +217,7 @@ const TenantsList = () => {
           fetchTenants(pagination.currentPage, filters);    
         } else {
          // ✅ Get the actual error message from Redux
-         console.log("response payload",resultActionCreateTenant.payload)
+        //  console.log("response payload",resultActionCreateTenant.payload)
         const errorMessage =
           resultActionCreateTenant.payload ||
           resultActionCreateTenant.error?.message ||

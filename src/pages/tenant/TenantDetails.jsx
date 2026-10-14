@@ -6,7 +6,7 @@ import TenantInfoCard from '../../components/cards/TenantInfoCard';
 import TenantRoomInfo from '../../components/tenant/TenantRoomInfo';
 import TenantForm from '../../components/forms/TenantForm';
 import { getUserID } from '../../features/auth/authService';
-import { getTenantInfoAsyncThunk } from '../../features/tenant/tenantSlice';
+import { getTenantInfoAsyncThunk, updateTenantAsyncThunk } from '../../features/tenant/tenantSlice';
 import { toast } from 'react-toastify';
 import { useDispatch, useSelector } from 'react-redux';
 import Header from '../../components/layouts/Header';
@@ -121,23 +121,42 @@ const TenantDetails = () => {
        * Endpoint: PUT /api/tenants/:tenantId
        * Body: tenant data (status is NOT editable)
        */
-      const response = await fetch(`${API_BASE_URL}/tenants/${tenantId}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
-      });
-      const result = await response.json();
+      // const response = await fetch(`${API_BASE_URL}/tenants/${tenantId}`, {
+      //   method: 'PUT',
+      //   headers: { 'Content-Type': 'application/json' },
+      //   body: JSON.stringify(data),
+      // });
+      // const result = await response.json();
 
-      if (result.success) {
-        setTenant(result.data);
-        setIsDrawerOpen(false);
-        alert('✅ Tenant updated successfully!');
-      } else {
-        alert('❌ Failed to update tenant: ' + result.message);
+      // if (result.success) {
+      //   setTenant(result.data);
+      //   setIsDrawerOpen(false);
+      //   alert('✅ Tenant updated successfully!');
+      // } 
+      data.ownerId=getUserID()
+        const credentials ={
+        tenantId:tenantId,
+        data:data
+        }
+        const resultActionUpdateTenant=await dispatch(updateTenantAsyncThunk(credentials))
+        if (updateTenantAsyncThunk.fulfilled.match(resultActionUpdateTenant)){
+           setIsDrawerOpen(false);
+           toast.success('Tenant updated successfully!');
+           window.location.reload();//for re-load page 
+
+        }else {
+         //  console.log("response payload",resultActionCreateTenant.payload)
+        const errorMessage =
+          resultActionUpdateTenant.payload ||
+          resultActionUpdateTenant.error?.message ||
+          'Something went wrong while creating the tenant.';
+
+        // ✅ Show the error message in toast
+        toast.error(`Failed to update tenant: ${errorMessage}`);
       }
     } catch (error) {
       console.error('Error updating tenant:', error);
-      alert('❌ Error: ' + error.message);
+      toast.error('❌ Error: ' + error.message);
     } finally {
       setIsSubmitting(false);
     }

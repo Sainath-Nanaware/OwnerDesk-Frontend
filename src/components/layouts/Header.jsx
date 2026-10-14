@@ -47,8 +47,8 @@ const Header = ({ isLoggedIn = false }) => {
   // ============================================
   const dropdownItems = [
     { icon: <FaUserCircle className="w-5 h-5" />, label: 'Profile', path: '/profile' },
-    { icon: <MdDashboard className="w-5 h-5" />, label: 'Dashboard', path: '/dashboard' },
-    { icon: <FaCog className="w-5 h-5" />, label: 'Settings', path: '/settings' },
+    { icon: <MdDashboard className="w-5 h-5" />, label: 'Dashboard', path: '/ownerhome' },
+    // { icon: <FaCog className="w-5 h-5" />, label: 'Settings', path: '/settings' },
     { divider: true },
     { icon: <FaSignOutAlt className="w-5 h-5" />, label: 'Logout', path: '/', danger: true },
   ];

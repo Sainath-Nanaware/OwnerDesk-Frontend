@@ -68,7 +68,7 @@ axiosClient.interceptors.response.use(
 
     if (status === 401) {
       removeToken();
-      // toast.error("Session expired. Please log in again.");
+      toast.error("Session expired. Please log in again.");
       // window.location.href = "/login";
     }
 
