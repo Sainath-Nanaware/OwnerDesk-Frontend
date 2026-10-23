@@ -8,6 +8,16 @@ export const registerUser = (data) => axiosClient.post("/user/register", data);
 export const loginUser=(data)=>axiosClient.post("/user/login",data);
 
 
+//Owner API
+export const getOwnerInfo = (ownerId) =>
+  axiosClient.get(`/user/${ownerId}`);
+
+export const updateOwnerProfile = (data) =>
+  axiosClient.patch(`/user/editprofile`,data);
+
+export const changeLoginPassword = (data) =>
+  axiosClient.patch(`/user/changepassword`,data);
+
 //property API
 export const getAllProperty = (ownerID,page,limit) =>
   axiosClient.get(`/property/owner/${ownerID}?page=${page}&limit=${limit}`);
